@@ -1,10 +1,9 @@
 <!DOCTYPE html>
 <html lang="de">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tod erfassen</title>
+    <title>Immigration erfassen</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -40,23 +39,27 @@
         }
     </style>
 </head>
-
 <body>
     <h1>Personendaten erfassen</h1>
     <form method="post">
         {% csrf_token %}
 
         <div class="form-group">
-            <label for="sterbedatum">Sterbedatum:</label>
-            <input type="date" id="sterbedatum" name="sterbedatum" required>
+            <label for="nachname">Nachname:</label>
+            <input type="text" id="nachname" name="nachname" required>
         </div>
 
         <div class="form-group">
-            <label for="id_person">ID der verstorbenen Person:</label>
-            <input type="text" id="id_person" name="id_person" required>
+            <label for="vorname">Vorname:</label>
+            <input type="text" id="vorname" name="vorname" required>
         </div>
 
-        <button type="submit">Tod bestätigen.</button>
+        <div class="form-group">
+            <label for="geburtsdatum">Geburtsdatum:</label>
+            <input type="date" id="geburtsdatum" name="geburtsdatum" required>
+        </div>
+
+        <button type="submit">Immigration erfassen</button>
     </form>
 </body>
 </html>

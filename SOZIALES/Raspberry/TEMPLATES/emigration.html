@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="de">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Geburt erfassen</title>
+    <title>Emigration erfassen</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -39,37 +40,24 @@
         }
     </style>
 </head>
+
 <body>
     <h1>Personendaten erfassen</h1>
     <form method="post">
         {% csrf_token %}
 
         <div class="form-group">
-            <label for="nachname">Nachname:</label>
-            <input type="text" id="nachname_geburt" name="nachname_geburt" required>
+            <label for="id_person">ID der emigrierten Person:</label>
+            <input type="text" id="id_person" name="id_person" required>
         </div>
 
         <div class="form-group">
-            <label for="vorname">Vorname:</label>
-            <input type="text" id="vorname" name="vorname" required>
+            <label for="emigrationsdatum">Emigrationsdatum:</label>
+            <input type="date" id="emigrationsdatum" name="emigrationsdatum" required>
         </div>
 
-        <div class="form-group">
-            <label for="geburtsdatum">Geburtsdatum:</label>
-            <input type="date" id="geburtsdatum" name="geburtsdatum" required>
-        </div>
 
-        <div class="form-group">
-            <label for="id_vater">ID des Vaters:</label>
-            <input type="text" id="id_vater" name="id_vater">
-        </div>
-
-        <div class="form-group">
-            <label for="id_mutter">ID der Mutter:</label>
-            <input type="text" id="id_mutter" name="id_mutter">
-        </div>
-
-        <button type="submit">Speichern</button>
+        <button type="submit">Emigration bestätigen.</button>
     </form>
 </body>
 </html>
