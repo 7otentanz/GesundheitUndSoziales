@@ -33,9 +33,47 @@ def geburt(request):
 
 		fertigespdf = pdf.output(dest="S").encode("latin-1")
 		response = HttpResponse(fertigespdf, content_type="application/pdf")
-		response["Content-Disposition"] = 'attachment; filename="geburtsurkunde.pdf"'
+		response["Content-Disposition"] = "attachment; filename='geburtsurkunde.pdf'"
 
 		return response
 
 	else:
 		return render(request, "app/geburt.html")
+
+def tod(request):
+	if request.method == 'POST':
+
+		id_person = request.POST.get("id_person")
+		sterbedatum = request.POST.get("sterbedatum")
+
+		person = {"buerger_id": id_person, "sterbedatum": sterbedatum}
+
+		response = requests.post("http://[2001:7c0:2320:2:f816:3eff:fef8:f5b9]:8000/einwohnermeldeamt/personenstandsregister_api", data=person)
+		# hier noch richtige URL eintragen
+		print(response)
+
+		vorname = "Vorname"
+		#vorname = requests.get(URL/{id})
+		nachname = "Nachname"
+		#samesame
+
+		pdf = FPDF()
+		pdf.add_page()
+		pdf.set_font("Arial", style="B", size=16)
+		pdf.cell(0, 20, "Sterbeurkunde", align="C", ln=True)
+		pdf.ln(20)
+		pdf.set_font("Arial", size=14)
+		pdf.cell(20, 0, f"Nachname: {nachname}")
+		pdf.ln(5)
+		pdf.cell(20, 0, f"Vorname: {vorname}")
+		pdf.ln(5)
+		pdf.cell(20, 0, f"Sterbedatum: {sterbedatum}") 
+
+		fertigespdf = pdf.output(dest="S").encode("latin-1")
+		response = HttpResponse(fertigespdf, content_type="application/pdf")
+		response["Content-Disposition"] = "attachment; filename='sterbeurkunde.pdf'"
+
+		return response
+	
+	else:
+		return render(request, "app/tod.html")

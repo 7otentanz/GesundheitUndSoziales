@@ -21,4 +21,5 @@ from app import views as app
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('geburt/', app.geburt, name='geburt'),
+    path('tod/', app.tod, name='tod'),
 ]
