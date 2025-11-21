@@ -60,7 +60,7 @@ def emigration(request):
 		pdf = FPDF()
 		pdf.add_page()
 		pdf.set_font("Arial", style="B", size=16)
-		pdf.cell(0, 20, "Sterbeurkunde", align="C", ln=True)
+		pdf.cell(0, 20, "Emigrationsurkunde", align="C", ln=True)
 		pdf.ln(20)
 		pdf.set_font("Arial", size=14)
 		pdf.cell(20, 0, f"Nachname: {nachname}")
