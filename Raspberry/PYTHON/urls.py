@@ -20,7 +20,5 @@ from app import views as app
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('test/', app.test),
-    path('einwohner_<int:id>', app.einwohner),
     path('geburt/', app.geburt, name='geburt'),
 ]
