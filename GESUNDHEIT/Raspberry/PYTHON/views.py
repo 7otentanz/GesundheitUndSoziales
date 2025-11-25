@@ -13,29 +13,35 @@ def geburt(request):
 		id_mutter = request.POST.get("id_mutter")
 		id_vater = request.POST.get("id_vater")
 
-		person = {"nachname_geburt": nachname, "vorname": vorname, "geburtsdatum": geburtsdatum, "staatsangehoerigkeit": "UNSERSTAAT"}
+		#person = {"nachname_geburt": nachname, "vorname": vorname, "geburtsdatum": geburtsdatum, "staatsangehoerigkeit": "UNSERSTAAT"}
+		elterngeld = {"id_vater": id_vater, "id_mutter": id_mutter, "betrag": 1000}
 
-		response = requests.post("http://[2001:7c0:2320:2:f816:3eff:fef8:f5b9]:8000/einwohnermeldeamt/personenstandsregister_api", data=person)
-		print(response)
+		#neugeboren = requests.post("http://[2001:7c0:2320:2:f816:3eff:fef8:f5b9]:8000/einwohnermeldeamt/personenstandsregister_api", data=person)
+		#print(neugeboren)
 
-		buerger_id = response.text
-		pdf = FPDF()
-		pdf.add_page()
-		pdf.set_font("Arial", style="B", size=16)
-		pdf.cell(0, 20, "Geburtsurkunde", align="C", ln=True)
-		pdf.ln(20)
-		pdf.set_font("Arial", size=14)
-		pdf.cell(20, 0, f"Geburtsname: {nachname}")
-		pdf.ln(5)
-		pdf.cell(20, 0, f"Vorname: {vorname}")
-		pdf.ln(5)
-		pdf.cell(20, 0, f"Buerger ID: {buerger_id}") 
+		elterngeld = requests.post("http://[2001:7c0:2320:2:f816:3eff:fe5a:29eb]:8000/elterngeld/", data=elterngeld)
+		print(elterngeld)
 
-		fertigespdf = pdf.output(dest="S").encode("latin-1")
-		response = HttpResponse(fertigespdf, content_type="application/pdf")
-		response["Content-Disposition"] = "attachment; filename='geburtsurkunde.pdf'"
+		#buerger_id = neugeboren.text
+		#pdf = FPDF()
+		#pdf.add_page()
+		#pdf.set_font("Arial", style="B", size=16)
+		#pdf.cell(0, 20, "Geburtsurkunde", align="C", ln=True)
+		#pdf.ln(20)
+		#pdf.set_font("Arial", size=14)
+		#pdf.cell(20, 0, f"Geburtsname: {nachname}")
+		#pdf.ln(5)
+		#pdf.cell(20, 0, f"Vorname: {vorname}")
+		#pdf.ln(5)
+		#pdf.cell(20, 0, f"Buerger ID: {buerger_id}") 
 
-		return response
+		#fertigespdf = pdf.output(dest="S").encode("latin-1")
+		#response = HttpResponse(fertigespdf, content_type="application/pdf")
+		#response["Content-Disposition"] = "attachment; filename='geburtsurkunde.pdf'"
+
+		#return response
+		antwort = elterngeld.text
+		return HttpResponse(f"{antwort}")
 
 	else:
 		return render(request, "app/geburt.html")
