@@ -1,31 +1,10 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import os
+import json
 
-#def test(request):
-#	return HttpResponse("Hallo.")
-
-einwohnerliste = [
-{"id": 123, "name": "Laura Pfefferkorn"},
-{"id": 234, "name": "Tim Hauser"},
-]
-
-
-def name(request, name):
-	return HttpResponse(f"Hello my name is {name}.")
-
-def einwohner(request, id):
-	for eintrag  in einwohnerliste:
-		if eintrag["id"] == id:
-			return HttpResponse(f"{eintrag['name']} gefunden")
-		else:
-			return HttpResponse("Nope.")
-#@csrf_exempt
-#def geburt(request, person):
-#	print(os.getcwd())
-#	with open("/var/www/static/person.txt", "w") as datei:
-#		datei.write(person)
+static = "/var/www/static"
 
 @csrf_exempt
 def geburt(request):
@@ -34,3 +13,9 @@ def geburt(request):
 		with open("/var/www/static/person.txt", "w") as datei:
 			datei.write(text)
 	return HttpResponse("ok")
+
+def elterngeld(request):
+	with open(f"{static}/elterngeld.json", "r", encoding="utf-8") as datei:
+		elterngeldberechtigte = json.load(datei)
+		
+		return JsonResponse(elterngeldberechtigte)

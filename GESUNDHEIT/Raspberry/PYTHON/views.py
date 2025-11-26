@@ -37,7 +37,7 @@ def geburt(request):
 
 		fertigespdf = pdf.output(dest="S").encode("latin-1")
 		response = HttpResponse(fertigespdf, content_type="application/pdf")
-		response["Content-Disposition"] = "attachment; filename='geburtsurkunde.pdf'"
+		response["Content-Disposition"] = "attachment; filename=geburtsurkunde.pdf"
 
 		return response
 		#antwort = elterngeld.text
