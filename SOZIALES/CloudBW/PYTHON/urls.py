@@ -22,6 +22,7 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('geburt', app.geburt),
-    path('elterngeldberechtigte', app.elterngeld)
+    path('elterngeldberechtigte', app.elterngeldberechtigte),
+    path('elterngeldanlegen', app.elterngeldanlegen),
 ]
 urlpatterns += staticfiles_urlpatterns()
