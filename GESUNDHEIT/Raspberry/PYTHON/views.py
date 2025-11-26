@@ -14,13 +14,13 @@ def geburt(request):
 		id_vater = request.POST.get("id_vater")
 
 		person = {"nachname_geburt": nachname, "vorname": vorname, "geburtsdatum": geburtsdatum, "staatsangehoerigkeit": "UNSERSTAAT"}
-		elterngeld = {"id_vater": id_vater, "id_mutter": id_mutter, "betrag": 1000}
+		#elterngeld = {"id_vater": id_vater, "id_mutter": id_mutter, "betrag": 1000}
 
 		neugeboren = requests.post("http://[2001:7c0:2320:2:f816:3eff:fef8:f5b9]:8000/einwohnermeldeamt/personenstandsregister_api", data=person)
 		print(neugeboren)
 
-		elterngeld = requests.post("http://[2001:7c0:2320:2:f816:3eff:fe5a:29eb]:8000/elterngeld/", data=elterngeld)
-		print(elterngeld)
+		#elterngeld = requests.post("http://[2001:7c0:2320:2:f816:3eff:fe5a:29eb]:8000/elterngeld/", data=elterngeld)
+		#print(elterngeld)
 
 		buerger_id = neugeboren.text
 		pdf = FPDF()
