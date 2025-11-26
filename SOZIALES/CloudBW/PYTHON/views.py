@@ -20,6 +20,7 @@ def elterngeldberechtigte(request):
 		
 		return JsonResponse(elterngeldberechtigte)
 
+@csrf_exempt
 def elterngeldanlegen(request):
 	if request.method == 'POST':
 		id_mutter = request.POST.get("id_mutter")
