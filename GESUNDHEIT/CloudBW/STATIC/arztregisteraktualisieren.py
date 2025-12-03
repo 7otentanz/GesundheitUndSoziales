@@ -50,4 +50,4 @@ def arztregistrieren():
     with open(f"{static}/aktualisierung.txt", "w") as datei:
         datei.write(f"Arztregister aktualisiert am {datetime.datetime.now()}.")
 
-arztregistrieren(){'personen': [{'uid': 'arzt', 'spezialisierung': 'Pulmologe', 'standort': 'Krankenhaus Ludwigsburg, Posilipostraße 4, 71640 Ludwigsburg'}]}
+arztregistrieren()
