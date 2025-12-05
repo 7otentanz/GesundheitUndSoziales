@@ -1,9 +1,14 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-import RPi.GPIO as gpio
-import requests
-from fpdf import FPDF
+#import RPi.GPIO as gpio
+#import requests
+#from fpdf import FPDF
+from django.views.decorators.csrf import csrf_exempt
+import json
 
+static = "/var/www/static"
+
+@csrf_exempt
 def immigration(request):
 	if request.method == 'POST':
 
@@ -40,6 +45,8 @@ def immigration(request):
 	else:
 		return render(request, "app/immigration.html")
 
+
+@csrf_exempt
 def emigration(request):
 	if request.method == 'POST':
 
@@ -77,3 +84,19 @@ def emigration(request):
 	
 	else:
 		return render(request, "app/emigration.html")
+	
+
+@csrf_exempt
+def renteregistrieren(request):
+	if request.method == 'POST':
+		buerger_id = request.POST.get("buerger_id")
+		letztes_gehalt = request.POST.get("letzts_gehalt")
+
+		with open(f"{static}/rentenregister.json", "r", encoding="utf8") as datei:
+			rentenregister = json.load(datei)
+		rentenregister[buerger_id] = {"letztes_gehalt" : letztes_gehalt}
+
+		with open (f"{static}/rentenregister.json", "w", encoding="utf-8") as datei:
+			json.dump(rentenregister, datei, indent=4)
+
+		return HttpResponse("OK", status=200)
