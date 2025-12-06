@@ -17,13 +17,9 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from app import views as app
-from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('immigration/', app.immigration, name='immigration'),
     path('emigration/', app.emigration, name='emigration'),
-    path('rentnerregistrieren/', app.rentnerregistrieren),
 ]
-
-urlpatterns += staticfiles_urlpatterns()

@@ -24,5 +24,7 @@ urlpatterns = [
     path('geburt', app.geburt),
     path('elterngeldberechtigte', app.elterngeldberechtigte),
     path('elterngeldanlegen', app.elterngeldanlegen),
+    path('rentnerregistrieren/', app.rentnerregistrieren, name='rentnerregistrieren'),
+
 ]
 urlpatterns += staticfiles_urlpatterns()
