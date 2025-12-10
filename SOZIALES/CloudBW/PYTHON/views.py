@@ -3,6 +3,9 @@ from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import os
 import json
+import requests
+
+from /var/www/static.rentenregisteraktualisieren import rentnersync #heulen und googlen, wie import von static ordner funktinoiert
 
 static = "/var/www/static"
 
@@ -12,7 +15,7 @@ def geburt(request):
 		text = str(request.POST.get("nachname_geburt"))
 		with open("/var/www/static/person.txt", "w") as datei:
 			datei.write(text)
-	return HttpResponse("ok")
+	return HttpResponse("ok", status=200)
 
 def elterngeldberechtigte(request):
 	with open(f"{static}/elterngeld.json", "r", encoding="utf-8") as datei:
@@ -37,18 +40,3 @@ def elterngeldanlegen(request):
 		
 		return HttpResponse("OK", status=200)
 	
-
-@csrf_exempt
-def renteregistrieren(request):
-	if request.method == 'POST':
-		buerger_id = request.POST.get("buerger_id")
-		letztes_gehalt = request.POST.get("letzts_gehalt")
-
-		with open(f"{static}/rentenregister.json", "r", encoding="utf8") as datei:
-			rentenregister = json.load(datei)
-		rentenregister[buerger_id] = {"letztes_gehalt" : letztes_gehalt}
-
-		with open (f"{static}/rentenregister.json", "w", encoding="utf-8") as datei:
-			json.dump(rentenregister, datei, indent=4)
-
-		return HttpResponse("OK", status=200)

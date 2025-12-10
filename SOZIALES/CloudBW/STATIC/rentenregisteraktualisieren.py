@@ -2,10 +2,10 @@ import requests
 import json
 import datetime
 
-#static = "/var/www/static" #server
-static = "C:/Laura/Studium/Ludwigsburg/2025_26_WiSe/Inf/GesundheitUndSoziales/SOZIALES/CloudBW/STATIC" #Laptop
+static = "/var/www/static" #server
+#static = "C:/Laura/Studium/Ludwigsburg/2025_26_WiSe/Inf/GesundheitUndSoziales/SOZIALES/CloudBW/STATIC" #Laptop
 
-def renteregistrieren():
+def rentnersync():
     response = requests.get("http://[2001:7c0:2320:2:f816:3eff:feb6:6731]:8000/api/personenliste/rente")
     rentenliste = response.json()
     print(rentenliste)
@@ -34,7 +34,7 @@ def renteregistrieren():
         #Renter noch nicht registriert, muss noch hinzugefügt werden
         elif buerger_id not in list(rentenregister["personen"]):
             letztes_gehalt = rentner["letztes_gehalt"]
-            rentenregister["personen"].append({"uid":buerger_id, "lestztes_gehalt":letztes_gehalt})
+            rentenregister["personen"].append({"uid":buerger_id, "letztes_gehalt":letztes_gehalt})
 
         else:
             continue #Platzhalter
@@ -49,4 +49,4 @@ def renteregistrieren():
 
 
 
-renteregistrieren()
+rentnersync()
