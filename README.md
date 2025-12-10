@@ -1,4 +1,4 @@
 # GesundheitUndSoziales
-Informatikprojekt fünftes Semester
+Informatikprojekt fünftes Semester...
 ## Grundarchitektur
 ![Grundarchitektur](DIVERSES/grundarchitektur.png)
