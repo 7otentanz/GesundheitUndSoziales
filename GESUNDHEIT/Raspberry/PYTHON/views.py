@@ -53,7 +53,6 @@ def tod(request):
 		person = {"buerger_id": id_person, "sterbedatum": sterbedatum}
 
 		response = requests.post("http://[2001:7c0:2320:2:f816:3eff:fef8:f5b9]:8000/einwohnermeldeamt/personenstandsregister_api", data=person)
-		# hier noch richtige URL eintragen
 		print(response)
 
 		vorname = "Vorname"
