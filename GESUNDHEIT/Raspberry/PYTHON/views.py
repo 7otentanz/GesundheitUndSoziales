@@ -80,8 +80,3 @@ def tod(request):
 	
 	else:
 		return render(request, "app/tod.html")
-
-def arzt(request):
-	arzt = {"buerger_id": "123", "spezialisierung": "Neurologe", "standort": "Krankenhaus 1"}
-	response = requests.post("http://[2001:7c0:2320:2:f816:3eff:fe06:8d56]:8000/arztregistrieren/", data=arzt)
-	return HttpResponse(response.text)
