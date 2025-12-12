@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 import RPi.GPIO as GPIO
-from mfrc522 import SimpleMfrc522
+from mfrc522 import SimpleMFRC522
 import requests
 #from fpdf import FPDF
 
@@ -40,7 +40,7 @@ def geburt(request):
 		#response = HttpResponse(fertigespdf, content_type="application/pdf")
 		#response["Content-Disposition"] = "attachment; filename=geburtsurkunde.pdf"
 
-		reader = SimpleMfrc522()
+		reader = SimpleMFRC522()
 		buerger_id = neugeboren.text
 		reader.write(buerger_id)
 		print(f"RFID-Karte beschrieben mit {buerger_id}.")
