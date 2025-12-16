@@ -21,11 +21,6 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    #path('test/', app.test),
-    path('test_<str:name>/', app.name),
-    path('einwohner_<int:id>/', app.einwohner),
-    #path('geburt_<str:person>/', app.geburt)
     path('geburt/', app.geburt),
-    path('arztregistrieren/', app.arztregistrieren)
 ]
 urlpatterns += staticfiles_urlpatterns()

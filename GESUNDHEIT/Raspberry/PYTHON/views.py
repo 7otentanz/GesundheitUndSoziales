@@ -1,8 +1,9 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-import RPi.GPIO as gpio
+import RPi.GPIO as GPIO
+from mfrc522 import SimpleMFRC522
 import requests
-from fpdf import FPDF
+#from fpdf import FPDF
 
 def geburt(request):
 	if request.method == 'POST':
@@ -22,24 +23,13 @@ def geburt(request):
 		elterngeldanlegen = requests.post("http://[2001:7c0:2320:2:f816:3eff:fed4:e456]:1810/elterngeldanlegen", data=elterngeld)
 		print(elterngeldanlegen)
 
+		# Zurückgegebene Bürger ID auf RFID Karte schreiben
+		reader = SimpleMFRC522()
 		buerger_id = neugeboren.text
-		pdf = FPDF()
-		pdf.add_page()
-		pdf.set_font("Arial", style="B", size=16)
-		pdf.cell(0, 20, "Geburtsurkunde", align="C", ln=True)
-		pdf.ln(20)
-		pdf.set_font("Arial", size=14)
-		pdf.cell(20, 0, f"Geburtsname: {nachname}")
-		pdf.ln(5)
-		pdf.cell(20, 0, f"Vorname: {vorname}")
-		pdf.ln(5)
-		pdf.cell(20, 0, f"Buerger ID: {buerger_id}") 
+		reader.write(buerger_id)
+		print(f"RFID-Karte beschrieben mit {buerger_id}.")
 
-		fertigespdf = pdf.output(dest="S").encode("latin-1")
-		response = HttpResponse(fertigespdf, content_type="application/pdf")
-		response["Content-Disposition"] = "attachment; filename=geburtsurkunde.pdf"
-
-		return response
+		return HttpResponse(f"Herzlichen Glückwunsch zur Geburt von {vorname}.")
 
 	else:
 		return render(request, "app/geburt.html")
@@ -47,42 +37,19 @@ def geburt(request):
 def tod(request):
 	if request.method == 'POST':
 
-		id_person = request.POST.get("id_person")
 		sterbedatum = request.POST.get("sterbedatum")
+
+		# Bürger ID aus RFID Karte auslesen
+		reader = SimpleMFRC522()
+		id, data = reader.read()
+		id_person = data
 
 		person = {"buerger_id": id_person, "sterbedatum": sterbedatum}
 
 		response = requests.post("http://[2001:7c0:2320:2:f816:3eff:fef8:f5b9]:8000/einwohnermeldeamt/personenstandsregister_api", data=person)
-		# hier noch richtige URL eintragen
 		print(response)
 
-		vorname = "Vorname"
-		#vorname = requests.get(URL/{id})
-		nachname = "Nachname"
-		#samesame
+		return HttpResponse(f"{id_person} ist verstorben am {sterbedatum}. Requiescat in pace.")
 
-		pdf = FPDF()
-		pdf.add_page()
-		pdf.set_font("Arial", style="B", size=16)
-		pdf.cell(0, 20, "Sterbeurkunde", align="C", ln=True)
-		pdf.ln(20)
-		pdf.set_font("Arial", size=14)
-		pdf.cell(20, 0, f"Nachname: {nachname}")
-		pdf.ln(5)
-		pdf.cell(20, 0, f"Vorname: {vorname}")
-		pdf.ln(5)
-		pdf.cell(20, 0, f"Sterbedatum: {sterbedatum}") 
-
-		fertigespdf = pdf.output(dest="S").encode("latin-1")
-		response = HttpResponse(fertigespdf, content_type="application/pdf")
-		response["Content-Disposition"] = "attachment; filename='sterbeurkunde.pdf'"
-
-		return response
-	
 	else:
 		return render(request, "app/tod.html")
-
-def arzt(request):
-	arzt = {"buerger_id": "123", "spezialisierung": "Neurologe", "standort": "Krankenhaus 1"}
-	response = requests.post("http://[2001:7c0:2320:2:f816:3eff:fe06:8d56]:8000/arztregistrieren/", data=arzt)
-	return HttpResponse(response.text)

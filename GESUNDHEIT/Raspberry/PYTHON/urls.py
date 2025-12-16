@@ -22,5 +22,4 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('geburt/', app.geburt, name='geburt'),
     path('tod/', app.tod, name='tod'),
-    path('arztregistrieren/', app.arzt),
 ]
