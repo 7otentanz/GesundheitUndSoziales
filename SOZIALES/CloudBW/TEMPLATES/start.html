@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+        <meta charset="utf-8"></meta>
+        <meta name="viewport" content="width=device-width,initial-scale=1"></meta>
+        <title>Soziales - Startseite</title>
+        <style>
+    body {
+        margin: 0;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        font-family: Arial, Helvetica, sans-serif;
+        background-color: #f4f6f8;
+        text-align: center;
+    }
+
+    h1 {
+        margin-bottom: 0.5em;
+    }
+
+    h2 {
+        margin-top: 2em;
+        margin-bottom: 1em;
+    }
+
+    /* Container für die Links */
+    .link-container {
+        display: flex;
+        gap: 1.5em;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    a {
+        text-decoration: none;
+        color: inherit;
+    }
+
+    .link {
+        padding: 1.2em 2em;
+        border: 2px solid #2c7be5;
+        border-radius: 8px;
+        background-color: #ffffff;
+        min-width: 180px;
+        cursor: pointer;
+        transition: background-color 0.2s, transform 0.2s, box-shadow 0.2s;
+    }
+
+    .link:hover {
+        background-color: #2c7be5;
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    }
+</style>
+
+</head>
+<body>
+        <h1>Willkommen in der Abteilung Soziales!</h1>
+        <h2>Sie sind in der Verwaltung tätig?</h2>
+        <div class="link-container">
+        <a href="http://soziales.local:8000/immigration/"><div class="link">Immigration anzeigen</div></a>
+        <a href="http://soziales.local:8000/emigration/"><div class="link">Emigration anzeigen</div></a>
+        </div>
+
+        <h2>Sie sind Bürger?</h2>
+        <a><div class="link">Übersicht über meine Sozialleistungen</div></a>
+</body>
+

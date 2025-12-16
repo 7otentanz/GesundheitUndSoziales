@@ -8,19 +8,8 @@ import requests
 
 static = "/var/www/static"
 
-@csrf_exempt
-def geburt(request):
-	if request.method == 'POST':
-		text = str(request.POST.get("nachname_geburt"))
-		with open("/var/www/static/person.txt", "w") as datei:
-			datei.write(text)
-	return HttpResponse("ok", status=200)
-
-def elterngeldberechtigte(request):
-	with open(f"{static}/elterngeld.json", "r", encoding="utf-8") as datei:
-		elterngeldberechtigte = json.load(datei)
-		
-		return JsonResponse(elterngeldberechtigte)
+def start(request):
+	return render(request, "app/start.html")
 
 @csrf_exempt
 def elterngeldanlegen(request):
