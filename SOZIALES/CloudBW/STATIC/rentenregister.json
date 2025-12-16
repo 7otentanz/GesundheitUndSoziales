@@ -1,8 +1,14 @@
 {
     "personen": [
         {
+            "uid": "buerger0002",
+            "letztes_gehalt": 0,
+            "rentenbetrag": 1500
+        },
+        {
             "uid": "rente",
-            "letztes_gehalt": 3000
+            "letztes_gehalt": 3000,
+            "rentenbetrag": 2400.0
         }
     ]
 }
