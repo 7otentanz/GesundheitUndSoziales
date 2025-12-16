@@ -5,7 +5,6 @@ import os
 import json
 import requests
 
-from /var/www/static.rentenregisteraktualisieren import rentnersync #heulen und googlen, wie import von static ordner funktinoiert
 
 static = "/var/www/static"
 
@@ -40,3 +39,39 @@ def elterngeldanlegen(request):
 		
 		return HttpResponse("OK", status=200)
 	
+
+@csrf_exempt
+def api_rentenbetraege(request):
+
+	if request.method == "GET":
+		with open (f"{static}/rentenregister.json", "r", encoding="utf-8") as datei:
+			rentenregister = json.load(datei)
+
+		daten = []
+
+		for rentner in list(rentenregister["personen"]):
+			daten.append({
+				"uid" : rentner["uid"],
+				"rentenbetrag" : rentner["rentenbetrag"]})
+		
+		return JsonResponse({"personen": daten}, json_dumps_params={'indent': 4})
+	
+
+@csrf_exempt
+def api_arbeitslosenbetraege(request):
+
+	if request.method == "GET":
+		with open (f"{static}/arbeitslosenregister.json", "r", encoding="utf-8") as datei:
+			arbeitslosenregister = json.load(datei)
+
+		daten = []
+
+		for arbeitsloser in list(arbeitslosenregister["personen"]):
+			daten.append({
+				"uid" : arbeitsloser["uid"],
+				"arbeitslosengeld" : arbeitsloser["arbeitslosengeld"]})
+		
+		return JsonResponse({"personen": daten}, json_dumps_params={'indent': 4})
+
+			
+
