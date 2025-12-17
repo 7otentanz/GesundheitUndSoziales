@@ -28,6 +28,13 @@ def elterngeldanlegen(request):
 		
 		return HttpResponse("OK", status=200)
 	
+@csrf_exempt
+def elterngeldberechtigte(request):
+	with open(f"{static}/elterngeld.json", "r", encoding="utf-8") as datei:
+		elterngeldberechtigte = json.load(datei)
+		
+		return JsonResponse(elterngeldberechtigte)
+	
 
 @csrf_exempt
 def api_rentenbetraege(request):
