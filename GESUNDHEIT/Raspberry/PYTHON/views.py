@@ -21,8 +21,9 @@ def geburt(request):
 		print(f"Personenregister: {neugeboren}")
 
 		buerger_id = neugeboren.text
+		id_kind = {"id_kind": buerger_id}
 
-		kindergeld = requests.post("http://[2001:7c0:2320:2:f816:3eff:fed4:e456]:1810/kindergeldanlegen", data=buerger_id)
+		kindergeld = requests.post("http://[2001:7c0:2320:2:f816:3eff:fed4:e456]:1810/kindergeldanlegen", data=id_kind)
 		print(f"Kindergeld: {kindergeld}")
 
 		elterngeldanlegen = requests.post("http://[2001:7c0:2320:2:f816:3eff:fed4:e456]:1810/elterngeldanlegen", data=elterngeld)
