@@ -18,14 +18,18 @@ def geburt(request):
 		elterngeld = {"id_vater": id_vater, "id_mutter": id_mutter}
 
 		neugeboren = requests.post("http://[2001:7c0:2320:2:f816:3eff:fef8:f5b9]:8000/einwohnermeldeamt/personenstandsregister_api", data=person)
-		print(neugeboren)
+		print(f"Personenregister: {neugeboren}")
+
+		buerger_id = neugeboren.text
+
+		kindergeld = requests.post("http://[2001:7c0:2320:2:f816:3eff:fed4:e456]:1810/kindergeldanlegen", data=buerger_id)
+		print(f"Kindergeld: {kindergeld}")
 
 		elterngeldanlegen = requests.post("http://[2001:7c0:2320:2:f816:3eff:fed4:e456]:1810/elterngeldanlegen", data=elterngeld)
-		print(elterngeldanlegen)
+		print(f"Elterngeld: {elterngeldanlegen}")
 
 		# Zurückgegebene Bürger ID auf RFID Karte schreiben
 		reader = SimpleMFRC522()
-		buerger_id = neugeboren.text
 		reader.write(buerger_id)
 		print(f"RFID-Karte beschrieben mit {buerger_id}.")
 
