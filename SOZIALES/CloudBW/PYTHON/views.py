@@ -20,8 +20,10 @@ def elterngeldanlegen(request):
 		with open(f"{static}/elterngeld.json", "r", encoding="utf-8") as datei:
 			elterngeldberechtigte = json.load(datei)
 
-		elterngeldberechtigte["berechtigte"].append(id_mutter)
-		elterngeldberechtigte["berechtigte"].append(id_vater)
+		if id_mutter not in elterngeldberechtigte["berechtigte"]:
+			elterngeldberechtigte["berechtigte"].append(id_mutter)
+		if id_vater not in elterngeldberechtigte["berechtigte"]:
+			elterngeldberechtigte["berechtigte"].append(id_vater)
 
 		with open(f"{static}/elterngeld.json", "w", encoding="utf-8") as datei:
 			json.dump(elterngeldberechtigte, datei, indent=4)
@@ -39,12 +41,12 @@ def elterngeldberechtigte(request):
 def kindergeldanlegen(request):
 	if request.method == 'POST':
 		id_kind = request.POST.get("id_kind")
-		
 
 		with open(f"{static}/kindergeld.json", "r", encoding="utf-8") as datei:
 			kindergeldberechtigte = json.load(datei)
 
-		kindergeldberechtigte["berechtigte"].append(id_kind)
+		if id_kind not in kindergeldberechtigte["berechtigte"]:
+			kindergeldberechtigte["berechtigte"].append(id_kind)
 
 		with open(f"{static}/kindergeld.json", "w", encoding="utf-8") as datei:
 			json.dump(kindergeldberechtigte, datei, indent=4)
