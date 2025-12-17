@@ -38,13 +38,13 @@ def elterngeldberechtigte(request):
 @csrf_exempt
 def kindergeldanlegen(request):
 	if request.method == 'POST':
-		buerger_id = request.POST.get("buerger_id")
+		id_kind = request.POST.get("id_kind")
 		
 
 		with open(f"{static}/kindergeld.json", "r", encoding="utf-8") as datei:
 			kindergeldberechtigte = json.load(datei)
 
-		kindergeldberechtigte["berechtigte"].append(buerger_id)
+		kindergeldberechtigte["berechtigte"].append(id_kind)
 
 		with open(f"{static}/kindergeld.json", "w", encoding="utf-8") as datei:
 			json.dump(kindergeldberechtigte, datei, indent=4)
