@@ -6,7 +6,9 @@ import json
 import requests
 
 
-static = "/var/www/static"
+static_soz = "/var/www/static/sozialleistungen"
+static_rente = "/var/www/static/rente"
+static_arbeit = "/var/www/static/arbeitslos"
 
 def start(request):
 	return render(request, "app/start.html")
@@ -17,7 +19,7 @@ def elterngeldanlegen(request):
 		id_mutter = request.POST.get("id_mutter")
 		id_vater = request.POST.get("id_vater")
 
-		with open(f"{static}/elterngeld.json", "r", encoding="utf-8") as datei:
+		with open(f"{static_soz}/elterngeld.json", "r", encoding="utf-8") as datei:
 			elterngeldberechtigte = json.load(datei)
 
 		if id_mutter not in elterngeldberechtigte["berechtigte"]:
@@ -25,14 +27,14 @@ def elterngeldanlegen(request):
 		if id_vater not in elterngeldberechtigte["berechtigte"]:
 			elterngeldberechtigte["berechtigte"].append(id_vater)
 
-		with open(f"{static}/elterngeld.json", "w", encoding="utf-8") as datei:
+		with open(f"{static_soz}/elterngeld.json", "w", encoding="utf-8") as datei:
 			json.dump(elterngeldberechtigte, datei, indent=4)
 		
 		return HttpResponse("OK", status=200)
 	
 @csrf_exempt
 def elterngeldberechtigte(request):
-	with open(f"{static}/elterngeld.json", "r", encoding="utf-8") as datei:
+	with open(f"{static_soz}/elterngeld.json", "r", encoding="utf-8") as datei:
 		elterngeldberechtigte = json.load(datei)
 		
 		return JsonResponse(elterngeldberechtigte)
@@ -42,20 +44,20 @@ def kindergeldanlegen(request):
 	if request.method == 'POST':
 		id_kind = request.POST.get("id_kind")
 
-		with open(f"{static}/kindergeld.json", "r", encoding="utf-8") as datei:
+		with open(f"{static_soz}/kindergeld.json", "r", encoding="utf-8") as datei:
 			kindergeldberechtigte = json.load(datei)
 
 		if id_kind not in kindergeldberechtigte["berechtigte"]:
 			kindergeldberechtigte["berechtigte"].append(id_kind)
 
-		with open(f"{static}/kindergeld.json", "w", encoding="utf-8") as datei:
+		with open(f"{static_soz}/kindergeld.json", "w", encoding="utf-8") as datei:
 			json.dump(kindergeldberechtigte, datei, indent=4)
 		
 		return HttpResponse("OK", status=200)
 	
 @csrf_exempt
 def kindergeldberechtigte(request):
-	with open(f"{static}/kindergeld.json", "r", encoding="utf-8") as datei:
+	with open(f"{static_soz}/kindergeld.json", "r", encoding="utf-8") as datei:
 		kindergeldberechtigte = json.load(datei)
 		
 		return JsonResponse(kindergeldberechtigte)
@@ -65,7 +67,7 @@ def kindergeldberechtigte(request):
 def api_rentenbetraege(request):
 
 	if request.method == "GET":
-		with open (f"{static}/rentenregister.json", "r", encoding="utf-8") as datei:
+		with open (f"{static_rente}/rentenregister.json", "r", encoding="utf-8") as datei:
 			rentenregister = json.load(datei)
 
 		daten = []
@@ -82,7 +84,7 @@ def api_rentenbetraege(request):
 def api_arbeitslosenbetraege(request):
 
 	if request.method == "GET":
-		with open (f"{static}/arbeitslosenregister.json", "r", encoding="utf-8") as datei:
+		with open (f"{static_arbeit}/arbeitslosenregister.json", "r", encoding="utf-8") as datei:
 			arbeitslosenregister = json.load(datei)
 
 		daten = []

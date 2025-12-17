@@ -2,7 +2,7 @@ import requests
 import json
 import datetime
 
-static = "/var/www/static" #server
+static = "/var/www/static/arbeitslos" #server
 #static = "C:/Laura/Studium/Ludwigsburg/2025_26_WiSe/Inf/GesundheitUndSoziales/SOZIALES/CloudBW/STATIC" #Laptop
 
 def arbeitslosensync():
