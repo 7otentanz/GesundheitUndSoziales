@@ -23,6 +23,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('elterngeldberechtigte/', app.elterngeldberechtigte),
     path('elterngeldanlegen', app.elterngeldanlegen),
+    path('kindergeldberechtigte/', app.kindergeldberechtigte),
     path('kindergeldanlegen', app.kindergeldanlegen),
     path('api_rentenbetraege/', app.api_rentenbetraege),
     path('api_arbeitslosenbetraege/', app.api_arbeitslosenbetraege),
