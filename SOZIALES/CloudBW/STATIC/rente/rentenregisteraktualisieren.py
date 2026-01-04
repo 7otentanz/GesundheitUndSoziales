@@ -3,9 +3,9 @@ import json
 import datetime
 
 static = "/var/www/static/rente" #server
-#static = "C:/Laura/Studium/Ludwigsburg/2025_26_WiSe/Inf/GesundheitUndSoziales/SOZIALES/CloudBW/STATIC" #Laptop
+#static = "C:/Laura/Studium/Ludwigsburg/2025_26_WiSe/Inf/GesundheitUndSoziales/SOZIALES/CloudBW/STATIC/rente" #Laptop
 
-def rentnerync():
+def rentnersync():
 
     response = requests.get("http://[2001:7c0:2320:2:f816:3eff:feb6:6731]:8000/api/personenliste/rente")
     rentenliste = response.json()
@@ -53,4 +53,4 @@ def rentnerync():
 
 
 
-rentnerync()
+rentnersync()

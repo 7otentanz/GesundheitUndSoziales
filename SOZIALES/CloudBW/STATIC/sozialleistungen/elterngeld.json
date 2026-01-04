@@ -1,0 +1,13 @@
+{
+    "betrag": 500,
+    "berechtigte": [
+        {
+            "id_sorgebrechtigter1": "111",
+            "Datum": "2025-12-26 12:26:31.256581"
+        },
+        {
+            "id_sorgebrechtigter2": "222",
+            "Datum": "2025-12-26 12:26:31.256581"
+        }
+    ]
+}
