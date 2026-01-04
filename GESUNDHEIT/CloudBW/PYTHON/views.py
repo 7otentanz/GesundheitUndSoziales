@@ -9,7 +9,7 @@ static = "/var/www/static"
 def start(request):
 	return render(request, "app/start.html")
 
-def termin(request):
+def terminspezialisierung(request):
 	with open(f"{static}/arztregister.json", "r") as datei:
 		arztregister = json.load(datei)
 
@@ -20,23 +20,65 @@ def termin(request):
 		
 		if spezialisierung not in spezialisierungen:
 			spezialisierungen.append(spezialisierung)
+	
+	context = {"spezialisierungen": spezialisierungen}
 
-	standorte = []
-	gewaehltespezialisierung = ""
+	return render(request, "app/terminspezialisierung.html", context)
+	
+def terminstandort(request):
+	with open(f"{static}/arztregister.json", "r") as datei:
+		arztregister = json.load(datei)	
 
 	# Spezialisierung abfangen
 	if request.method == 'POST':
-		gewaehltespezialisierung = request.POST.get("spezialisierung")
+		spezialisierung = request.POST.get("spezialisierung")
 
 		# Standorte auslesen die auf die gewählte Spezialisierung passen
+		standorte = []
 		for arzt in list(arztregister["personen"]):
-			if arzt["spezialisierung"] == gewaehltespezialisierung:
+			if arzt["spezialisierung"] == spezialisierung:
 				standorte.append(arzt["standort"])
 	
-	context = {
-		"spezialisierungen": spezialisierungen,
-		"standorte": standorte,
-		"gewaehltespezialisierung": gewaehltespezialisierung
-	}
-		
-	return render(request, "app/termin.html", context)
+		context = {
+			"spezialisierung": spezialisierung,
+			"standorte": standorte
+		}
+			
+		return render(request, "app/terminstandort.html", context)
+
+def terminarzt(request):
+	with open(f"{static}/arztregister.json", "r") as datei:
+		arztregister = json.load(datei)
+
+	if request.method == 'POST':
+		spezialisierung = request.POST.get("spezialisierung")
+		standort = request.POST.get("standort")
+
+		# Ärzte auslesen die auf Spezialisierung und Standort passen
+		aerzte = []
+		for arzt in list(arztregister["personen"]):
+			if arzt["spezialisierung"] == spezialisierung and arzt["standort"] == standort:
+				aerzte.append(arzt["uid"]) ### Hier noch ersetzen durch Vor- und Nachnamen nachdem die API steht!
+
+		context = {
+			"spezialisierung": spezialisierung,
+			"standort": standort,
+			"aerzte": aerzte
+		}
+
+		return render(request, "app/terminarzt.html", context)
+
+def termintest(request):
+	if request.method == 'POST':
+
+		spez = request.POST.get("spezialisierung")
+		stand = request.POST.get("standort")
+		arzt = request.POST.get("arzt")
+
+		terminjson = {
+			"Spez": spez,
+			"Stand": stand,
+			"Arzt": arzt
+		}
+
+	return HttpResponse(str(terminjson))

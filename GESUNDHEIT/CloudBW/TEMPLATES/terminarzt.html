@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arzttermin vereinbaren</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Personendaten erfassen</h1>
+    <form action="{% url 'termintest' %}" method="POST" id="arzttermin">
+    {% csrf_token %}
+
+    <!-- Spezialisierung -->
+    <label for="spezialisierung">Spezialisierung:</label>
+    <select name="spezialisierung" id="spezialisierung" onchange="submit()">
+        <option value="{{ spezialisierung }}" selected>{{ spezialisierung }}</option>
+    </select>
+
+    <!-- Standort - hier noch leer!-->
+    <label for="standort">Standort:</label>
+    <select name="standort" id="standort" onchange="submit()">
+        <option value="{{ standort }}" selected>{{ standort }}</option>
+    </select>
+
+    <!-- Arzt - hier noch leer! -->
+    <label for="arzt">Arzt:</label>
+     <select name="arzt" id="arzt">
+        <option value="" selected>Bitte wählen</option>
+        {% for arzt in aerzte %}
+            <option value="{{ arzt }}">{{ arzt }}</option>
+        {% endfor %}
+    </select>
+
+    <button type="submit">Termin buchen!</button>
+</form>
+</body>
+</html>
+
