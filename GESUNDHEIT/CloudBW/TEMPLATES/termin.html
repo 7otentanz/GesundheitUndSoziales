@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Geburt erfassen</title>
+    <title>Arzttermin vereinbaren</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -42,35 +42,30 @@
 <body>
     <h1>Personendaten erfassen</h1>
     <form method="post">
-        {% csrf_token %}
+    {% csrf_token %}
 
-        <div class="form-group">
-            <label for="nachname">Nachname:</label>
-            <input type="text" id="nachname_geburt" name="nachname_geburt" required>
-        </div>
+    <label for="spezialisierung">Spezialisierung:</label>
+    <select name="spezialisierung" onchange="this.form.submit()">
+        <option value="">Bitte auswählen</option>
+        {% for spez in spezialisierungen %}
+            <option value="{{ spez }}"
+                {% if spez == ausgewaehlte_spezialisierung %}selected{% endif %}>
+                {{ spez }}
+            </option>
+        {% endfor %}
+    </select>
 
-        <div class="form-group">
-            <label for="vorname">Vorname:</label>
-            <input type="text" id="vorname" name="vorname" required>
-        </div>
+    <br><br>
 
-        <div class="form-group">
-            <label for="geburtsdatum">Geburtsdatum:</label>
-            <input type="date" id="geburtsdatum" name="geburtsdatum" required>
-        </div>
+    <label for="standort">Standort:</label>
+    <select name="standort">
+        <option value="">Bitte auswählen</option>
+        {% for standort in standorte %}
+            <option value="{{ standort }}">{{ standort }}</option>
+        {% endfor %}
+    </select>
 
-        <div class="form-group">
-            <label for="id_vater">(opt.) ID des Vaters:</label>
-            <input type="text" id="id_vater" name="id_vater">
-        </div>
-
-        <div class="form-group">
-            <label for="id_mutter">(opt.) ID der Mutter:</label>
-            <input type="text" id="id_mutter" name="id_mutter">
-        </div>
-
-        <button type="submit">Speichern</button>
-    </form>
+</form>
 </body>
 </html>
 
