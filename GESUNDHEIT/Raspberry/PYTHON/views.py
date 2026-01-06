@@ -3,6 +3,7 @@ from django.http import HttpResponse
 import RPi.GPIO as GPIO
 from mfrc522 import SimpleMFRC522
 import requests
+import time
 #from fpdf import FPDF
 
 def geburt(request):
@@ -14,7 +15,7 @@ def geburt(request):
 		id_mutter = request.POST.get("id_mutter")
 		id_vater = request.POST.get("id_vater")
 
-		person = {"nachname_geburt": nachname, "vorname": vorname, "geburtsdatum": geburtsdatum, "staatsangehoerigkeit": "UNSERSTAAT"}
+		person = {"nachname_geburt": nachname, "vorname": vorname, "geburtsdatum": geburtsdatum, "staatsangehoerigkeit": "UNSERSTAAT", "vater_id": id_vater, "mutter_id": id_mutter}
 		elterngeld = {"id_vater": id_vater, "id_mutter": id_mutter}
 
 		neugeboren = requests.post("http://[2001:7c0:2320:2:f816:3eff:fef8:f5b9]:8000/einwohnermeldeamt/personenstandsregister_api", data=person)
