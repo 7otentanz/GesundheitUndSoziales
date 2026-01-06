@@ -16,28 +16,28 @@ def start(request):
 @csrf_exempt
 def elterngeldanlegen(request):
 	if request.method == 'POST':
-		id_sorgebrechtigter1 = request.POST.get("id_sorgebrechtigter1")
-		id_sorgebrechtigter2 = request.POST.get("id_sorgebrechtigter2")
-		datum = datetime.date.today()
+		id_sorgebrechtigter1 = request.POST.get("id_vater")
+		id_sorgebrechtigter2 = request.POST.get("id_mutter")
+		datum = str(datetime.date.today())
+		print(f"1: {id_sorgebrechtigter1}, 2: {id_sorgebrechtigter2}")
 
 		with open(f"{static_soz}/elterngeld.json", "r", encoding="utf-8") as datei:
 			elterngeldregister = json.load(datei)
-
-		#Eltern noch nicht in Elterngeldbereichtigte.json
-		if id_sorgebrechtigter1 not in elterngeldregister["berechtigte"]:
-			elterngeldregister["berechtigte"].append({"id_sorgebrechtigter1" : id_sorgebrechtigter1, "Datum" : datum})
-		if id_sorgebrechtigter2 not in elterngeldregister["berechtigte"]:
-			elterngeldregister["berechtigte"].append({"id_sorgebrechtigter2" : id_sorgebrechtigter2, "Datum" : datum})
 		
-		#Eltern bereits vorhanden
-		if id_sorgebrechtigter1 in elterngeldregister["berechtigte"]:
-			elterngeldregister["berechtigte"].remove({"Datum" : datum})
-			elterngeldregister["berechtigte"].append({"Datum" : datum})
-		if id_sorgebrechtigter2 in elterngeldregister["berechtigte"]:
-			elterngeldregister["berechtigte"].remove({"Datum" : datum})
-			elterngeldregister["berechtigte"].append({"Datum" : datum})
-		
+		#Personen sind in Register, Update Datum
+		for person in list(elterngeldregister["berechtigte"]):
+			if id_sorgebrechtigter1 in person:
+				person[id_sorgebrechtigter1] = datum
+			if id_sorgebrechtigter2 in person:
+				person[id_sorgebrechtigter2] = datum
+			
+		#Personen noch nicht in Register, hinzufügen
+			if id_sorgebrechtigter1 not in person:
+				elterngeldregister["berechtigte"].append({f"{id_sorgebrechtigter1}": datum})
+			if id_sorgebrechtigter2 not in person:
+				elterngeldregister["berechtigte"].append({f"{id_sorgebrechtigter2}": datum})
 
+		
 		with open(f"{static_soz}/elterngeld.json", "w", encoding="utf-8") as datei:
 			json.dump(elterngeldregister, datei, indent=4)
 		
@@ -54,13 +54,13 @@ def elterngeldberechtigte(request):
 def kindergeldanlegen(request):
 	if request.method == 'POST':
 		id_kind = request.POST.get("id_kind")
-		datum = datetime.date.today()
+		datum = str(datetime.date.today())
+		print(datum)
 
 		with open(f"{static_soz}/kindergeld.json", "r", encoding="utf-8") as datei:
 			kindergeldberechtigte = json.load(datei)
 
-		if id_kind not in kindergeldberechtigte["berechtigte"]:
-			kindergeldberechtigte["berechtigte"].append({"id_kind" : id_kind, "Datum" : datum})
+		kindergeldberechtigte["berechtigte"].append({"id_kind" : id_kind, "Datum" : datum})
 
 		with open(f"{static_soz}/kindergeld.json", "w", encoding="utf-8") as datei:
 			json.dump(kindergeldberechtigte, datei, indent=4)

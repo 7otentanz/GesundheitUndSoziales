@@ -22,7 +22,9 @@ def elterngeldsync():
     #soll nur Datum prüfen --> wenn
 
     for berechtigte in elterngeldregister["berechtigte"]:
-        eintrag_datum = datetime.date(berechtigte["Datum"])
+        for person_id, datum_str in berechtigte.items():
+            eintrag_datum = datetime.datetime.strptime(datum_str, "%Y-%m-%d").date()
+            print (eintrag_datum)
 
         if heute - eintrag_datum > ein_jahr:
             elterngeldregister["berechtigte"].remove(berechtigte)
