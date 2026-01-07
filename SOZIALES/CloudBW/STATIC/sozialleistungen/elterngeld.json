@@ -1,13 +1,17 @@
 {
-    "betrag": 500,
+    "betrag": "500",
     "berechtigte": [
         {
-            "id_sorgebrechtigter1": "111",
-            "Datum": "2025-12-26 12:26:31.256581"
+            "sorgeberechtigter": "123-123",
+            "datum": "2026-01-07"
         },
         {
-            "id_sorgebrechtigter2": "222",
-            "Datum": "2025-12-26 12:26:31.256581"
+            "sorgeberechtigter": "f50b021a-6061-4758-aad9-e6e41b262884",
+            "datum": "2026-01-07"
+        },
+        {
+            "sorgeberechtigter": "f50b021a-6061-4758-aad9-e6e41b262884",
+            "datum": "2026-01-07"
         }
     ]
 }
