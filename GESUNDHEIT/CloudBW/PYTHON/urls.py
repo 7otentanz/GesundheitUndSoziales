@@ -21,7 +21,8 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('start/', app.start),
+    path('jwt-login', app.jwt_login, name="jwt-login"),
+    path('start/', app.start, name="start"),
     path('terminspezialisierung/', app.terminspezialisierung, name="terminspezialisierung"),
     path('terminstandort/', app.terminstandort, name="terminstandort"),
     path('terminarzt/', app.terminarzt, name="terminarzt"),
