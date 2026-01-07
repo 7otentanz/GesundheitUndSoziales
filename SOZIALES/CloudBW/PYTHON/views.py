@@ -1,14 +1,35 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import os
 import json
 import requests
 import datetime
+from project.jwt_tooling import decode_jwt
 
 static_soz = "/var/www/static/sozialleistungen"
 static_rente = "/var/www/static/rente"
 static_arbeit = "/var/www/static/arbeitslos"
+
+def jwt_login(request):
+    token = request.GET.get("token")
+    if not token:
+        return HttpResponse("Kein Token übergeben.", status=400)
+
+    try:
+        daten = decode_jwt(token)
+    except Exception:
+        return HttpResponse("Ungültiges oder abgelaufenes Token.", status=401)
+
+    buerger_id = daten.get("user_id")
+    if not buerger_id:
+        return HttpResponse("Token enthält keine buerger_id.", status=400)
+
+    # Session auf Server B setzen
+    request.session["user_id"] = buerger_id
+
+    # Weiter ins Dashboard
+    return redirect("start") #hier anpassen, weiterleiten auf die Zielseite
 
 def start(request):
 	return render(request, "app/start.html")
@@ -19,23 +40,37 @@ def elterngeldanlegen(request):
 		id_sorgebrechtigter1 = request.POST.get("id_vater")
 		id_sorgebrechtigter2 = request.POST.get("id_mutter")
 		datum = str(datetime.date.today())
+		gesetz_elterngeld = requests.get("http://[2001:7c0:2320:2:f816:3eff:fe79:999d]/ro/gesetz_api/12")
+ 
 		print(f"1: {id_sorgebrechtigter1}, 2: {id_sorgebrechtigter2}")
 
 		with open(f"{static_soz}/elterngeld.json", "r", encoding="utf-8") as datei:
 			elterngeldregister = json.load(datei)
-		
-		#Personen sind in Register, Update Datum
-		for person in list(elterngeldregister["berechtigte"]):
-			if id_sorgebrechtigter1 in person:
-				person[id_sorgebrechtigter1] = datum
-			if id_sorgebrechtigter2 in person:
-				person[id_sorgebrechtigter2] = datum
+			berechtigte = elterngeldregister["berechtigte"]
+			neuer_betrag = gesetz_elterngeld.json()
+
+			betrag = neuer_betrag["api_relevant"][0]
+			elterngeldregister["betrag"] = betrag
+
+		in_register_vorhanden = False
+
+		for person in berechtigte:
+			if person["sorgeberechtigter"] == id_sorgebrechtigter1:
+				person["datum"] = datum
+				in_register_vorhanden = True
+				break
 			
-		#Personen noch nicht in Register, hinzufügen
-			if id_sorgebrechtigter1 not in person:
-				elterngeldregister["berechtigte"].append({f"{id_sorgebrechtigter1}": datum})
-			if id_sorgebrechtigter2 not in person:
-				elterngeldregister["berechtigte"].append({f"{id_sorgebrechtigter2}": datum})
+			if in_register_vorhanden == False:
+				elterngeldregister.append({"sorgeberechtigter" : id_sorgebrechtigter1, "datum" : datum})
+
+		for person in berechtigte:
+			if person["sorgeberechtigter"] == id_sorgebrechtigter2:
+				person["datum"] = datum
+				in_register_vorhanden = True
+				break
+			
+			if in_register_vorhanden == False:
+				elterngeldregister.append({"sorgeberechtigter" : id_sorgebrechtigter2, "datum" : datum})
 
 		
 		with open(f"{static_soz}/elterngeld.json", "w", encoding="utf-8") as datei:
@@ -55,12 +90,18 @@ def kindergeldanlegen(request):
 	if request.method == 'POST':
 		id_kind = request.POST.get("id_kind")
 		datum = str(datetime.date.today())
+		gesetz_kindergeld = requests.get("http://[2001:7c0:2320:2:f816:3eff:fe79:999d]/ro/gesetz_api/11")
 		print(datum)
 
 		with open(f"{static_soz}/kindergeld.json", "r", encoding="utf-8") as datei:
 			kindergeldberechtigte = json.load(datei)
+			neuer_betrag = gesetz_kindergeld.json()
 
-		kindergeldberechtigte["berechtigte"].append({"id_kind" : id_kind, "Datum" : datum})
+
+			betrag = neuer_betrag["api_relevant"][0]
+			kindergeldberechtigte["betrag"] = betrag
+
+		kindergeldberechtigte["berechtigte"].append({"id_kind" : id_kind, "datum" : datum})
 
 		with open(f"{static_soz}/kindergeld.json", "w", encoding="utf-8") as datei:
 			json.dump(kindergeldberechtigte, datei, indent=4)

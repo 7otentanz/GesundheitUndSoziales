@@ -3,9 +3,30 @@ from django.http import HttpResponse
 import RPi.GPIO as gpio
 import requests
 from fpdf import FPDF
+from project.jwt_tooling import decode_jwt
 
 
 static = "/var/www/static"
+
+def jwt_login(request):
+    token = request.GET.get("token")
+    if not token:
+        return HttpResponse("Kein Token übergeben.", status=400)
+
+    try:
+        daten = decode_jwt(token)
+    except Exception:
+        return HttpResponse("Ungültiges oder abgelaufenes Token.", status=401)
+
+    buerger_id = daten.get("buerger_id")
+    if not buerger_id:
+        return HttpResponse("Token enthält keine buerger_id.", status=400)
+
+    # Session auf Server B setzen
+    request.session["buerger_id"] = buerger_id
+
+    # Weiter ins Dashboard
+    return redirect("immigration") #hier anpassen, weiterleiten auf die Zielseite
 
 def immigration(request):
 	if request.method == 'POST':

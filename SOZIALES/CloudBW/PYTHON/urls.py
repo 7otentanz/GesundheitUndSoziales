@@ -21,13 +21,15 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('jwt-login', app.jwt_login),
+    path('start/', app.start, name='start'),
     path('elterngeldberechtigte/', app.elterngeldberechtigte),
     path('elterngeldanlegen', app.elterngeldanlegen),
     path('kindergeldberechtigte/', app.kindergeldberechtigte),
     path('kindergeldanlegen', app.kindergeldanlegen),
     path('api_rentenbetraege/', app.api_rentenbetraege),
     path('api_arbeitslosenbetraege/', app.api_arbeitslosenbetraege),
-    path('start/', app.start),
+    
 
 ]
 urlpatterns += staticfiles_urlpatterns()
