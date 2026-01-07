@@ -1,10 +1,33 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
+from project.jwt_tooling import decode_jwt
 import os
 import json
 
 static = "/var/www/static"
+
+def jwt_login(request):
+    token = request.GET.get("token")
+    if not token:
+        return HttpResponse("Kein Token übergeben.", status=400)
+
+    try:
+        daten = decode_jwt(token)
+        print(f"Cloud BW daten: {daten}")
+        print(f"Cloud BW user-id: {daten["user_id"]}")
+    except Exception:
+        return HttpResponse("Ungültiges oder abgelaufenes Token.", status=401)
+
+    buerger_id = daten.get("user_id")
+    if not buerger_id:
+        return HttpResponse("Token enthält keine buerger_id.", status=400)
+
+    # Session auf Server B setzen
+    request.session["user_id"] = buerger_id
+
+    # Weiter ins Dashboard
+    return redirect("start") #hier anpassen, weiterleiten auf die Zielseite
 
 def start(request):
 	return render(request, "app/start.html")

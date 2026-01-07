@@ -1,10 +1,33 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
 import RPi.GPIO as GPIO
 from mfrc522 import SimpleMFRC522
 import requests
 import time
+from project.jwt_tooling import decode_jwt
 #from fpdf import FPDF
+
+def jwt_login(request):
+    token = request.GET.get("token")
+    if not token:
+        return HttpResponse("Kein Token übergeben.", status=400)
+
+    try:
+        daten = decode_jwt(token)
+        print(f"Raspberry daten: {daten}")
+        print(f"Raspberry user-id: {daten["user_id"]}")
+    except Exception:
+        return HttpResponse("Ungültiges oder abgelaufenes Token.", status=401)
+
+    buerger_id = daten.get("user_id")
+    if not buerger_id:
+        return HttpResponse("Token enthält keine buerger_id.", status=400)
+
+    # Session auf Server B setzen
+    request.session["user_id"] = buerger_id
+
+    # Weiter ins Dashboard
+    return redirect("geburt") #hier anpassen, weiterleiten auf die Zielseite
 
 def geburt(request):
 	if request.method == 'POST':
@@ -15,7 +38,7 @@ def geburt(request):
 		id_mutter = request.POST.get("id_mutter")
 		id_vater = request.POST.get("id_vater")
 
-		person = {"nachname_geburt": nachname, "vorname": vorname, "geburtsdatum": geburtsdatum, "staatsangehoerigkeit": "UNSERSTAAT", "vater_id": id_vater, "mutter_id": id_mutter}
+		person = {"nachname_geburt": nachname, "vorname": vorname, "geburtsdatum": geburtsdatum, "vater_id": id_vater, "mutter_id": id_mutter}
 		elterngeld = {"id_vater": id_vater, "id_mutter": id_mutter}
 
 		neugeboren = requests.post("http://[2001:7c0:2320:2:f816:3eff:fef8:f5b9]:8000/einwohnermeldeamt/personenstandsregister_api", data=person)

@@ -20,6 +20,7 @@ from app import views as app
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('jwt-login', app.jwt_login, name="jwt-login"),
     path('geburt/', app.geburt, name='geburt'),
     path('tod/', app.tod, name='tod'),
 ]
