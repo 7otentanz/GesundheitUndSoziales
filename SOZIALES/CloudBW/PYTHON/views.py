@@ -61,7 +61,7 @@ def elterngeldanlegen(request):
 				break
 			
 			if in_register_vorhanden == False:
-				elterngeldregister.append({"sorgeberechtigter" : id_sorgebrechtigter1, "datum" : datum})
+				elterngeldregister["berechtigte"].append({"sorgeberechtigter" : id_sorgebrechtigter1, "datum" : datum})
 
 		for person in berechtigte:
 			if person["sorgeberechtigter"] == id_sorgebrechtigter2:
@@ -70,7 +70,7 @@ def elterngeldanlegen(request):
 				break
 			
 			if in_register_vorhanden == False:
-				elterngeldregister.append({"sorgeberechtigter" : id_sorgebrechtigter2, "datum" : datum})
+				elterngeldregister["berechtigte"].append({"sorgeberechtigter" : id_sorgebrechtigter2, "datum" : datum})
 
 		
 		with open(f"{static_soz}/elterngeld.json", "w", encoding="utf-8") as datei:
