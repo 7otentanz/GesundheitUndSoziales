@@ -15,15 +15,15 @@ def kindergeldsync():
         print (kindergeldregister)
 
     heute = datetime.date.today()
-    ein_jahr = heute - relativedelta(years=1)
+    ein_jahr = heute - relativedelta(years=25)
     
 
-    #soll nur Datum prüfen --> wenn länger als 1 Jahr her, dann löschen
+    #soll nur Datum prüfen --> wenn länger als 25 Jahr her, dann löschen
 
-    for berechtigte in kindergeldregister["berechtigte"]:
-        eintrag_datum = datetime.date(berechtigte["Datum"])
+    for berechtigte in list(kindergeldregister["berechtigte"]):
+        eintrag_datum = datetime.datetime.strptime(berechtigte["datum"], '%Y-%m-%d').date()
 
-        if heute - eintrag_datum > ein_jahr:
+        if eintrag_datum < ein_jahr:
             kindergeldregister["berechtigte"].remove(berechtigte)
 
   
@@ -32,7 +32,7 @@ def kindergeldsync():
         json.dump(kindergeldregister, datei, indent=4)
 
     with open(f"{static_soz}/kindergeldaktualisierung.txt", "w") as datei:
-        datei.write(f"kindergeldregister aktualisiert am {datetime.datetime.now()}.")
+        datei.write(f"Kindergeldregister aktualisiert am {datetime.datetime.now()}.")
     
 #        return HttpResponse("OK", status=200)
     

@@ -25,7 +25,7 @@ def elterngeldsync():
     for berechtigte in list(elterngeldregister["berechtigte"]):
         eintrag_datum = datetime.datetime.strptime(berechtigte["datum"], '%Y-%m-%d').date()
          
-        print (eintrag_datum)
+        #print (eintrag_datum)
 
         if eintrag_datum < ein_jahr:
             elterngeldregister["berechtigte"].remove(berechtigte)
@@ -37,7 +37,7 @@ def elterngeldsync():
 
     with open(f"{static_soz}/elterngeldaktualisierung.txt", "w") as datei:
         datei.write(f"Elterngeldregister aktualisiert am {datetime.datetime.now()}.")
-        print(elterngeldregister)
+        #print(elterngeldregister)
     
 #        return HttpResponse("OK", status=200)
     
