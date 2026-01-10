@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Termin auswählen</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            display: flex;
+            gap: 40px;
+            margin-top: 40px;
+        }
+
+        .left, .right {
+            width: 50%;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Terminbuchung</h1>
+
+<form method="POST" action="terminzeit.html">
+
+    <div class="container">
+
+        <!-- Linke Seite: Kalender -->
+        <div class="left">
+            <label for="datum">Datum auswählen</label>
+            <input
+                type="date"
+                id="datum"
+                name="datum"
+                onchange="submit()"
+            >
+        </div>
+
+        <!-- Rechte Seite: Uhrzeiten -->
+        <div class="right">
+                <label for="uhrzeit">Uhrzeit auswählen</label>
+                <select id="uhrzeit" name="uhrzeit">
+                    <option value="">Bitte wählen</option>
+                    <option value="09:00">09:00</option>
+                    <option value="10:00">10:00</option>
+                    <option value="11:00">11:00</option>
+                    <option value="13:00">13:00</option>
+                    <option value="14:00">14:00</option>
+                    <option value="15:00">15:00</option>
+                </select>
+                <p>Bitte zuerst ein Datum auswählen.</p>
+
+        </div>
+
+    </div>
+
+</form>
+
+</body>
+</html>
