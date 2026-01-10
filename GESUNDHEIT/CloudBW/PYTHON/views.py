@@ -91,17 +91,45 @@ def terminarzt(request):
 
 		return render(request, "app/terminarzt.html", context)
 
-def termintest(request):
+def termindatum(request):
 	if request.method == 'POST':
 
-		spez = request.POST.get("spezialisierung")
-		stand = request.POST.get("standort")
+		spezialisierung = request.POST.get("spezialisierung")
+		standort = request.POST.get("standort")
 		arzt = request.POST.get("arzt")
 
-		terminjson = {
-			"Spez": spez,
-			"Stand": stand,
-			"Arzt": arzt
+		context = {
+			"spezialisierung": spezialisierung,
+			"standort": standort,
+			"arzt": arzt
 		}
 
-	return HttpResponse(str(terminjson))
+		return render(request, "app/termindatum.html", context)
+
+def terminzeit(request):
+	if request.method == 'POST':
+
+		spezialisierung = request.POST.get("spezialisierung")
+		standort = request.POST.get("standort")
+		arzt = request.POST.get("arzt")
+		datum = request.POST.get("datum")
+
+		context = {
+			"spezialisierung": spezialisierung,
+			"standort": standort,
+			"arzt": arzt,
+			"datum": datum
+		}
+
+		return render(request, "app/terminzeit.html", context)
+	
+def terminendetest(request):
+	if request.method == 'POST':
+
+		spezialisierung = request.POST.get("spezialisierung")
+		standort = request.POST.get("standort")
+		arzt = request.POST.get("arzt")
+		datum = request.POST.get("datum")
+		uhrzeit = request.POST.get("uhrzeit")
+
+		return HttpResponse(f"{spezialisierung}, {standort}, {arzt}, {datum}, {uhrzeit}.")
