@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <title>Termin auswählen</title>
 
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -38,14 +40,20 @@
         <!-- Linke Seite: Kalender -->
         <div class="left">
             <label for="datum">Datum auswählen</label>
-            <input
-                type="date"
-                id="datum"
-                name="datum"
-                value="{{ datum }}"
-                onchange="submit()"
-            >
+            <input value="{{ datum }}" id="datum" name="datum" onchange="submit()">
+
+            <!-- Flatpickr JS -->
+            <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+            <script>
+                flatpickr("#datum", {
+                    inline: true,
+                    dateFormat: "Y-m-d",
+                    locale: "de"
+                });
+            </script>
         </div>
+
 
         <!-- Rechte Seite: Uhrzeiten -->
         <div class="right">
@@ -63,6 +71,7 @@
                 <input type="hidden" name="spezialisierung" value="{{ spezialisierung }}">
                 <input type="hidden" name="standort" value="{{ standort }}">
                 <input type="hidden" name="arzt" value="{{ arzt }}">
+                <input type="hidden" name="datum" value="{{ datum }}">
 
                 <button type="submit">Abschicken.</button>
         </div>

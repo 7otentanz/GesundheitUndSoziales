@@ -2,8 +2,10 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from project.jwt_tooling import decode_jwt
-import os
+from ics import Calendar, Event
+import uuid
 import json
+import datetime
 
 static = "/var/www/static"
 
@@ -59,7 +61,7 @@ def terminstandort(request):
 		# Standorte auslesen die auf die gewählte Spezialisierung passen
 		standorte = []
 		for arzt in list(arztregister["personen"]):
-			if arzt["spezialisierung"] == spezialisierung:
+			if arzt["spezialisierung"] == spezialisierung and arzt["standort"] not in standorte:
 				standorte.append(arzt["standort"])
 	
 		context = {
@@ -132,4 +134,23 @@ def terminendetest(request):
 		datum = request.POST.get("datum")
 		uhrzeit = request.POST.get("uhrzeit")
 
-		return HttpResponse(f"{spezialisierung}, {standort}, {arzt}, {datum}, {uhrzeit}.")
+		startzeit = datetime.datetime.strptime(f"{datum} {uhrzeit}", "%Y-%m-%d %H:%M")
+		endzeit = startzeit + datetime.timedelta(minutes=30)
+
+		event = Event()
+		event.name = f"Arzttermin: {arzt}, {spezialisierung}, {standort}"
+		event.begin = startzeit
+		event.end = endzeit
+		event.location = standort
+		event.description = f"Arzttermin bei:\nDr. {arzt}, {spezialisierung}\nin folgendem Krankenhaus:\n{standort}.\nWir wünschen gute Besserung!"
+		#event.uid = f"{uuid.uuid4()}@unserstaat.de"
+		
+		calendar = Calendar()
+		calendar.events.add(event)
+		#calendar.extra.append("VERSION:2.0")
+		#calendar.extra.append("PRODID:-//unserstaat//arzttermin//DE")
+
+		response = HttpResponse(calendar.serialize(), content_type="text/calendar")
+		response["Content-Disposition"] = "attachment; filename='termin.ics'"
+		return response
+		
