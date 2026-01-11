@@ -35,7 +35,7 @@
      <select name="arzt" id="arzt">
         <option value="" selected>Bitte wählen</option>
         {% for arzt in aerzte %}
-            <option value="{{ arzt }}">{{ arzt }}</option>
+            <option value="{{ arzt.uid }}">{{ arzt.name }}</option>
         {% endfor %}
     </select>
 

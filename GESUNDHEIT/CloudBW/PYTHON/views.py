@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from project.jwt_tooling import decode_jwt
 from ics import Calendar, Event
-import uuid
+import requests
 import json
 import datetime
 
@@ -83,7 +83,15 @@ def terminarzt(request):
 		aerzte = []
 		for arzt in list(arztregister["personen"]):
 			if arzt["spezialisierung"] == spezialisierung and arzt["standort"] == standort:
-				aerzte.append(arzt["uid"]) ### Hier noch ersetzen durch Vor- und Nachnamen nachdem die API steht!
+				response = requests.get(f'http://[2001:7c0:2320:2:f816:3eff:fef8:f5b9]:8000/einwohnermeldeamt/api/person/{arzt["uid"]}', headers={"Connection": "close"})
+				personendaten = response.json()
+				vorname = personendaten["vorname"]
+				if personendaten["nachname_neu"]:
+					nachname = personendaten["nachname_neu"]
+				else:
+					nachname = personendaten["nachname_geburt"]
+				arztname = f"Dr. {vorname} {nachname}"
+				aerzte.append({"uid": arzt["uid"], "name": arztname})
 
 		context = {
 			"spezialisierung": spezialisierung,
@@ -130,19 +138,28 @@ def terminendetest(request):
 
 		spezialisierung = request.POST.get("spezialisierung")
 		standort = request.POST.get("standort")
-		arzt = request.POST.get("arzt")
+		arztuid = request.POST.get("arzt")
 		datum = request.POST.get("datum")
 		uhrzeit = request.POST.get("uhrzeit")
+
+		response = requests.get(f'http://[2001:7c0:2320:2:f816:3eff:fef8:f5b9]:8000/einwohnermeldeamt/api/person/{arztuid}', headers={"Connection": "close"})
+		personendaten = response.json()
+		vorname = personendaten["vorname"]
+		if personendaten["nachname_neu"]:
+			nachname = personendaten["nachname_neu"]
+		else:
+			nachname = personendaten["nachname_geburt"]
+		arztname = f"Dr. {vorname} {nachname}"
 
 		startzeit = datetime.datetime.strptime(f"{datum} {uhrzeit}", "%Y-%m-%d %H:%M")
 		endzeit = startzeit + datetime.timedelta(minutes=30)
 
 		event = Event()
-		event.name = f"Arzttermin: {arzt}, {spezialisierung}, {standort}"
+		event.name = f"Arzttermin: {arztname}, {spezialisierung}, {standort}"
 		event.begin = startzeit
 		event.end = endzeit
 		event.location = standort
-		event.description = f"Arzttermin bei:\nDr. {arzt}, {spezialisierung}\nin folgendem Krankenhaus:\n{standort}.\nWir wünschen gute Besserung!"
+		event.description = f"Arzttermin bei:\n{arztname}, {spezialisierung}\nin folgendem Krankenhaus:\n{standort}.\nWir wünschen gute Besserung!"
 		#event.uid = f"{uuid.uuid4()}@unserstaat.de"
 		
 		calendar = Calendar()
@@ -151,6 +168,6 @@ def terminendetest(request):
 		#calendar.extra.append("PRODID:-//unserstaat//arzttermin//DE")
 
 		response = HttpResponse(calendar.serialize(), content_type="text/calendar")
-		response["Content-Disposition"] = "attachment; filename='termin.ics'"
+		response["Content-Disposition"] = 'attachment; filename="termin.ics"'
 		return response
 		
