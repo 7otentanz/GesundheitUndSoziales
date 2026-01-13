@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from django.http import HttpResponse
 import RPi.GPIO as gpio
 import requests
@@ -18,12 +18,12 @@ def jwt_login(request):
     except Exception:
         return HttpResponse("Ungültiges oder abgelaufenes Token.", status=401)
 
-    buerger_id = daten.get("buerger_id")
+    buerger_id = daten.get("user_id")
     if not buerger_id:
         return HttpResponse("Token enthält keine buerger_id.", status=400)
 
     # Session auf Server B setzen
-    request.session["buerger_id"] = buerger_id
+    request.session["user_id"] = buerger_id
 
     # Weiter ins Dashboard
     return redirect("immigration") #hier anpassen, weiterleiten auf die Zielseite
