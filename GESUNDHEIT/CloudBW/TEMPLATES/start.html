@@ -60,13 +60,21 @@
 </head>
 <body>
         <h1>Willkommen in der Abteilung Gesundheit!</h1>
-        <h2>Sie sind Arzt?</h2>
-        <div class="link-container">
-        <a href="http://raspberrypi.local:8000/geburt/"><div class="link">Geburt anzeigen</div></a>
-        <a href="http://raspberrypi.local:8000/tod/"><div class="link">Tod anzeigen</div></a>
-        </div>
+
+        {% if not request.session.user_id %}
+        <a href="http://[2001:7c0:2320:2:f816:3eff:fef8:f5b9]:8000/einwohnermeldeamt/login">Zum Login!</a>
+        
+            {% if request.session.beruf == "Arzt" %}
+            <h2>Sie sind Arzt?</h2>
+            <div class="link-container">
+            <a href="http://raspberrypi.local:8000/geburt/"><div class="link">Geburt anzeigen</div></a>
+            <a href="http://raspberrypi.local:8000/tod/"><div class="link">Tod anzeigen</div></a>
+            </div>
+            {% endif %}
+        {% endif %}
 
         <h2>Sie sind Bürger?</h2>
         <a><div class="link">Terminvereinbarungssystem</div></a>
+
 </body>
 
