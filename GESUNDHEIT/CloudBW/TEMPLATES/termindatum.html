@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Termin auswählen</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            display: flex;
+            gap: 40px;
+            margin-top: 40px;
+        }
+
+        .left, .right {
+            width: 50%;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Terminbuchung</h1>
+
+<form method="POST" action="{% url 'terminzeit' %}">
+    {% csrf_token %}
+
+    <div class="container">
+
+        <!-- Linke Seite: Kalender -->
+        <div class="left">
+            <label for="datum">Datum auswählen</label>
+            <input type="hidden" name ="datum" id="datum" onchange="submit()">
+
+            <!-- Flatpickr JS -->
+            <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+            <script>
+                flatpickr("#datum", {
+                    inline: true,
+                    dateFormat: "Y-m-d",
+                    locale: "de"
+                });
+            </script>
+        </div>
+
+        <!-- Rechte Seite: Uhrzeiten -->
+        <div class="right">
+                <label for="uhrzeit">Uhrzeit auswählen</label>
+                <select id="uhrzeit" name="uhrzeit" disabled>
+                    <option value="">Bitte wählen</option>
+                    <option value="09:00">09:00</option>
+                    <option value="10:00">10:00</option>
+                    <option value="11:00">11:00</option>
+                    <option value="13:00">13:00</option>
+                    <option value="14:00">14:00</option>
+                    <option value="15:00">15:00</option>
+                </select>
+                <p>Bitte zuerst ein Datum auswählen.</p>
+
+        </div>
+
+        <input type="hidden" name="spezialisierung" value="{{ spezialisierung }}">
+        <input type="hidden" name="standort" value="{{ standort }}">
+        <input type="hidden" name="arzt" value="{{ arzt }}">
+
+    </div>
+
+</form>
+
+</body>
+</html>

@@ -15,7 +15,7 @@
 </head>
 <body>
     <h1>Personendaten erfassen</h1>
-    <form action="{% url 'termintest' %}" method="POST" id="arzttermin">
+    <form action="{% url 'termindatum' %}" method="POST" id="arzttermin">
     {% csrf_token %}
 
     <!-- Spezialisierung -->
@@ -35,7 +35,7 @@
      <select name="arzt" id="arzt">
         <option value="" selected>Bitte wählen</option>
         {% for arzt in aerzte %}
-            <option value="{{ arzt }}">{{ arzt }}</option>
+            <option value="{{ arzt.uid }}">{{ arzt.name }}</option>
         {% endfor %}
     </select>
 

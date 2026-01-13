@@ -1,9 +1,44 @@
 {
     "personen": [
         {
-            "uid": "arzt",
+            "uid": "4c3c74f9-4b33-4321-8e49-d9b1cadadf23",
+            "spezialisierung": "Neurologe",
+            "standort": "Katharinenhospital, Kriegsbergstra\u00dfe 60, 70174 Stuttgart"
+        },
+        {
+            "uid": "3848720f-91f1-4b3c-bf71-c1d8c504dacc",
+            "spezialisierung": "Neurologe",
+            "standort": "Katharinenhospital, Kriegsbergstra\u00dfe 60, 70174 Stuttgart"
+        },
+        {
+            "uid": "4d26b3f3-f3be-42b0-9029-b13b736d0386",
+            "spezialisierung": "Pulmologe",
+            "standort": "RKH Klinikum, Posilipostra\u00dfe 4, 71640 Ludwigsburg"
+        },
+        {
+            "uid": "8e3a914c-d999-46cf-aa8b-a36c2272b9c7",
+            "spezialisierung": "Neurologe",
+            "standort": "Katharinenhospital, Kriegsbergstra\u00dfe 60, 70174 Stuttgart"
+        },
+        {
+            "uid": "0835c6d1-7202-4d19-a83e-e38f45050c22",
+            "spezialisierung": "Kardiologe",
+            "standort": "RKH Klinikum, Posilipostra\u00dfe 4, 71640 Ludwigsburg"
+        },
+        {
+            "uid": "867dc473-9499-4732-8585-1cfc6c4f2d04",
+            "spezialisierung": "Pulmologe",
+            "standort": "RKH Klinikum, Posilipostra\u00dfe 4, 71640 Ludwigsburg"
+        },
+        {
+            "uid": "00681072-83a3-402f-90b7-5d69dd8aac3e",
             "spezialisierung": "Unfallchirurg",
-            "standort": "Krankenhaus Ludwigsburg, Posilipostra\u00dfe 4, 71640 Ludwigsburg"
+            "standort": "Katharinenhospital, Kriegsbergstra\u00dfe 60, 70174 Stuttgart"
+        },
+        {
+            "uid": "4273626a-6e34-4e17-b873-2250acbc1ddd",
+            "spezialisierung": "Kardiologe",
+            "standort": "RKH Klinikum, Posilipostra\u00dfe 4, 71640 Ludwigsburg"
         }
     ]
 }

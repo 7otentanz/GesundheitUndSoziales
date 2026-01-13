@@ -9,7 +9,7 @@ spezialisierungen = ["Neurologe", "Pulmologe", "Kardiologe", "Zahnarzt", "Dental
 
 def arztregistrieren():
 
-    response = requests.get("http://[2001:7c0:2320:2:f816:3eff:feb6:6731]:8000/api/personenliste/arzt")
+    response = requests.get("http://[2001:7c0:2320:2:f816:3eff:feb6:6731]:8000/api/personenliste/arzt", headers={"Connection": "close"})
     arztliste = response.json()
     print(arztliste)
 
@@ -43,11 +43,5 @@ def arztregistrieren():
             continue #Platzhalter
     
     print(arztregister)
-
-    with open(f"{static}/arztregister.json", "w", encoding="utf-8") as datei:
-        json.dump(arztregister, datei, indent=4)
-
-    with open(f"{static}/aktualisierung.txt", "w") as datei:
-        datei.write(f"Arztregister aktualisiert am {datetime.datetime.now()}.")
 
 arztregistrieren()
