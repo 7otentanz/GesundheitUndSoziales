@@ -1,0 +1,7 @@
+Laura:
+
+
+Tim:
+- Terminseite / Kalender für Ärzte
+- Templates auf dem Pi nur für Ärzte
+- CSS Anpassungen

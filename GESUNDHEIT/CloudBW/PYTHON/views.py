@@ -16,8 +16,6 @@ def jwt_login(request):
 
     try:
         daten = decode_jwt(token)
-        print(f"Cloud BW daten: {daten}")
-        print(f"Cloud BW user-id: {daten["user_id"]}")
     except Exception:
         return HttpResponse("Ungültiges oder abgelaufenes Token.", status=401)
 
@@ -32,7 +30,16 @@ def jwt_login(request):
     return redirect("start") #hier anpassen, weiterleiten auf die Zielseite
 
 def start(request):
-	return render(request, "app/start.html")
+	buerger_id = request.session.get("user_id")
+
+	if not buerger_id:
+		return render(request, "app/start.html")
+	else:
+		response = requests.get(f"http://[2001:7c0:2320:2:f816:3eff:feb6:6731]:8000/api/buerger/beruf/{buerger_id}")
+		beruf = response.json()["beruf"]
+
+		request.session["beruf"] = beruf
+		return render(request, "app/start.html")
 
 def terminspezialisierung(request):
 	with open(f"{static}/arztregister.json", "r") as datei:
