@@ -23,4 +23,5 @@ urlpatterns = [
     path('jwt-login', app.jwt_login),
     path('immigration/', app.immigration, name='immigration'),
     path('emigration/', app.emigration, name='emigration'),
+    path('sozialleistungen/', app.sozialleistungen, name='sozialleistungen'),
 ]

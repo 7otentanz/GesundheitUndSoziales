@@ -102,3 +102,13 @@ def emigration(request):
 	
 	else:
 		return render(request, "app/emigration.html")
+	
+
+def sozialleistungen(request):
+	buerger_id = request.session.get("user_id")
+
+	api = f"http://[2001:7c0:2320:2:f816:3eff:fed4:e456]:1810/api_sozialleistungen/{buerger_id}"
+
+	response = requests.get(api)
+	daten = response.json()
+	return render(request, "sozialleistungen.html", {"user_id" : buerger_id, "daten" : daten})

@@ -29,6 +29,8 @@ urlpatterns = [
     path('kindergeldanlegen', app.kindergeldanlegen),
     path('api_rentenbetraege/', app.api_rentenbetraege),
     path('api_arbeitslosenbetraege/', app.api_arbeitslosenbetraege),
+    path('api_sozialleistungen/<str:user_id>', app.api_sozialleistungen, name = 'sozialleistungen'),
+    path('sozialleistungen/', app.sozialleistungen, name='sozialleistungen'),
     
 
 ]

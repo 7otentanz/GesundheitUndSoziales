@@ -32,45 +32,56 @@ def jwt_login(request):
     return redirect("start") #hier anpassen, weiterleiten auf die Zielseite
 
 def start(request):
-	return render(request, "app/start.html")
+	buerger_id = request.session.get("user_id")
+	
+	if not buerger_id: 
+		return render(request, "app/start.html")
+	
+	else:
+		response = requests.get(f"http://[2001:7c0:2320:2:f816:3eff:feb6:6731]:8000/api/buerger/beruf/{buerger_id}")
+		beruf = response.json()["beruf"]
+		
+		request.session["beruf"] = beruf
+		return render(request, "app/start.html")
 
 @csrf_exempt
 def elterngeldanlegen(request):
 	if request.method == 'POST':
-		id_sorgebrechtigter1 = request.POST.get("id_vater")
-		id_sorgebrechtigter2 = request.POST.get("id_mutter")
+		id_vater = request.POST.get("id_vater")
+		id_mutter = request.POST.get("id_mutter")
 		datum = str(datetime.date.today())
 		gesetz_elterngeld = requests.get("http://[2001:7c0:2320:2:f816:3eff:fe79:999d]/ro/gesetz_api/12")
  
-		print(f"1: {id_sorgebrechtigter1}, 2: {id_sorgebrechtigter2}")
+		print(f"1: {id_vater}, 2: {id_mutter}")
 
 		with open(f"{static_soz}/elterngeld.json", "r", encoding="utf-8") as datei:
 			elterngeldregister = json.load(datei)
 			berechtigte = elterngeldregister["berechtigte"]
+			
 			neuer_betrag = gesetz_elterngeld.json()
-
 			betrag = neuer_betrag["api_relevant"][0]
 			elterngeldregister["betrag"] = betrag
+
 
 		in_register_vorhanden = False
 
 		for person in berechtigte:
-			if person["sorgeberechtigter"] == id_sorgebrechtigter1:
+			if person["sorgeberechtigter"] == id_vater:
 				person["datum"] = datum
 				in_register_vorhanden = True
 				break
 			
-			if in_register_vorhanden == False:
-				elterngeldregister["berechtigte"].append({"sorgeberechtigter" : id_sorgebrechtigter1, "datum" : datum})
+		if in_register_vorhanden == False:
+			elterngeldregister["berechtigte"].append({"sorgeberechtigter" : id_vater, "datum" : datum})
 
 		for person in berechtigte:
-			if person["sorgeberechtigter"] == id_sorgebrechtigter2:
+			if person["sorgeberechtigter"] == id_mutter:
 				person["datum"] = datum
 				in_register_vorhanden = True
 				break
 			
-			if in_register_vorhanden == False:
-				elterngeldregister["berechtigte"].append({"sorgeberechtigter" : id_sorgebrechtigter2, "datum" : datum})
+		if in_register_vorhanden == False:
+			elterngeldregister["berechtigte"].append({"sorgeberechtigter" : id_mutter, "datum" : datum})
 
 		
 		with open(f"{static_soz}/elterngeld.json", "w", encoding="utf-8") as datei:
@@ -148,6 +159,64 @@ def api_arbeitslosenbetraege(request):
 				"arbeitslosengeld" : arbeitsloser["arbeitslosengeld"]})
 		
 		return JsonResponse({"personen": daten}, json_dumps_params={'indent': 4})
+	
+
+@csrf_exempt
+def api_sozialleistungen(request, user_id):
+
+	if request.method == "GET":
+		buerger_id = user_id
+
+		with open (f"{static_arbeit}/arbeitslosenregister.json", "r", encoding="utf-8") as datei:
+			arbeitslosenregister = json.load(datei)
+
+		with open (f"{static_soz}/elterngeld.json", "r", encoding="utf-8") as datei:
+			elterngeldregister = json.load(datei)
+		with open (f"{static_soz}/kindergeld.json", "r", encoding="utf-8") as datei:
+			kindergeldregister = json.load(datei)
+
+		with open (f"{static_rente}/rentenregister.json", "r", encoding="utf-8") as datei:
+			rentenregister = json.load(datei)
+
+		daten = []
+
+		# for person in list(arbeitslosenregister["person"]):
+		# 	if person["buerger_id"] == buerger_id:
+		# 		daten.append({
+		# 			"arbeitslosengeld" : person["arbeitslosengeld"]})
+		
+		for person in list (elterngeldregister["berechtigte"]):
+			if person["sorgeberechtigter"] == buerger_id:
+				daten.append({
+					"Elterngeld Datum erhalt ab: " : person["datum"],
+					"Elterngeldbetrag" : elterngeldregister.get("betrag")})
+
+		for person in list (kindergeldregister["berechtigte"]):
+			if person["id_kind"] == buerger_id:
+				daten.append({
+					"Kindergeld Datum erhalt ab: " : person["datum"],
+					"Kindergeldbetrag" : kindergeldregister.get("betrag")})
+
+		for person in list (rentenregister["personen"]):
+			if person["uid"] == buerger_id:
+				daten.append({
+					"Rentenbetrag: " : person["rentenbetrag"], 
+				  })
+		
+
+		return JsonResponse({"Sozialleistungen": daten}, json_dumps_params={'indent': 4})
+	
+
+def sozialleistungen(request):
+	buerger_id = request.session.get("user_id")
+
+	api = f"http://[2001:7c0:2320:2:f816:3eff:fed4:e456]:1810/api_sozialleistungen/{buerger_id}"
+
+	response = requests.get(api)
+	daten = response.json()
+	print("Daten ", daten)
+	return render(request, "app/sozialleistungen.html", {"user_id" : buerger_id, "daten" : daten})
+
 
 			
 

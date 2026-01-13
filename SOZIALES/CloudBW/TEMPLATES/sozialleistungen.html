@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Sozialleistungen</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        #Anzeige { white-space: pre-line; }
+    </style>
+</head>
+<body>
+    <h1>Sozialleistungen für ID: {{ user_id }}</h1>
+    <div id="Anzeige">
+        {% if daten.Sozialleistungen %}
+            {% for item in daten.Sozialleistungen %}
+                {% for key, value in item.items %}
+                    {{ key }} {{ value }}<br>
+                {% endfor %}
+        <br>
+            {% endfor %}
+        {% else %}
+    Keine Daten gefunden.
+        {% endif %}
+
+    </div>
+</body>
+</html>

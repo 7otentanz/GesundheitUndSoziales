@@ -59,14 +59,25 @@
 
 </head>
 <body>
-        <h1>Willkommen in der Abteilung Soziales!</h1>
-        <h2>Sie sind in der Verwaltung tätig?</h2>
+    <h1>Willkommen in der Abteilung Soziales!</h1>
+    {% if not request.session.user_id %}
+        <a href="http://[2001:7c0:2320:2:f816:3eff:fef8:f5b9]:8000/einwohnermeldeamt/login">zum Login</a>
+    {% endif %}
+
+
+    {% if request.session.user_id %}
+        <!-- wenn ID in Beamtenregister: das hier anzeigen-->
+        {% if request.session.beruf == "Beamter" %}
+        <h2>Dienstbereich</h2> <!-- Dienstbereich als überschrift? -->
         <div class="link-container">
         <a href="http://soziales.local:8000/immigration/"><div class="link">Immigration anzeigen</div></a>
         <a href="http://soziales.local:8000/emigration/"><div class="link">Emigration anzeigen</div></a>
         </div>
+        {% endif %}
 
-        <h2>Sie sind Bürger?</h2>
-        <a><div class="link">Übersicht über meine Sozialleistungen</div></a>
+        <!-- das hier immer anzeigen-->
+        <h2>Bürgerbereich</h2> <!-- Bürgerbereich als überschrift? -->
+        <a href="{% url 'sozialleistungen' request.session.user_id %}"><div class="link">Übersicht über meine Sozialleistungen</div></a>
+    {% endif %}
 </body>
 
