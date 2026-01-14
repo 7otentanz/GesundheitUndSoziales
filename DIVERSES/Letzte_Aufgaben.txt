@@ -5,3 +5,7 @@ Tim:
 - Terminseite / Kalender für Ärzte
 - Templates auf dem Pi nur für Ärzte
 - CSS Anpassungen
+
+aaf41910-8af3-424f-be54-5ecbb551c27e Vater
+
+0f9f5d01-5b18-4130-b0a4-dc3d517c32c5 Mutter

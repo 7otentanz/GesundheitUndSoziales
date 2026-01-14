@@ -74,6 +74,8 @@ def elterngeldanlegen(request):
 		if in_register_vorhanden == False:
 			elterngeldregister["berechtigte"].append({"sorgeberechtigter" : id_vater, "datum" : datum})
 
+		in_register_vorhanden = False
+
 		for person in berechtigte:
 			if person["sorgeberechtigter"] == id_mutter:
 				person["datum"] = datum
