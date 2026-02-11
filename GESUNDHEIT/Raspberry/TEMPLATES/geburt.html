@@ -39,38 +39,41 @@
         }
     </style>
 </head>
+
 <body>
     <h1>Personendaten erfassen</h1>
     <form method="post">
         {% csrf_token %}
 
-        <div class="form-group">
-            <label for="nachname">Nachname:</label>
-            <input type="text" id="nachname_geburt" name="nachname_geburt" required>
-        </div>
+        {% if not request.session.id_mutter %}
+            <!-- Diese Button wird eingeblendet, wenn keine "id_mutter" in der Session gespeichert ist -->
+            <p>Bitte scannen Sie zuerst die RFID-Karte der Mutter:</p>
+            <button type="submit" name="scan_mutter">RFID-Karte der Mutter scannen</button>
 
-        <div class="form-group">
-            <label for="vorname">Vorname:</label>
-            <input type="text" id="vorname" name="vorname" required>
-        </div>
+        {% elif not request.session.id_vater %}
+            <!-- Wenn eine "id_mutter" in der Session gespeichert ist, wird dieser Button eingeblendet -->
+            <p>Bitte scannen Sie als nächstes die RFID-Karte des Vaters:</p>
+            <button type="submit" name="scan_vater">RFID-Karte des Vaters scannen</button>
 
-        <div class="form-group">
-            <label for="geburtsdatum">Geburtsdatum:</label>
-            <input type="date" id="geburtsdatum" name="geburtsdatum" required>
-        </div>
+        {% else %}
+            <!-- Eine Formular für die Geburt wird erst dann eingeblendet, wenn sowohl "id_mutter", als auch "id_vater" in der Session stehen! -->
+            <div class="form-group">
+                <label for="nachname">Nachname:</label>
+                <input type="text" id="nachname_geburt" name="nachname_geburt" required>
+            </div>
 
-        <div class="form-group">
-            <label for="id_vater">(opt.) ID des Vaters:</label>
-            <input type="text" id="id_vater" name="id_vater">
-        </div>
+            <div class="form-group">
+                <label for="vorname">Vorname:</label>
+                <input type="text" id="vorname" name="vorname" required>
+            </div>
 
-        <div class="form-group">
-            <label for="id_mutter">(opt.) ID der Mutter:</label>
-            <input type="text" id="id_mutter" name="id_mutter">
-        </div>
+            <div class="form-group">
+                <label for="geburtsdatum">Geburtsdatum:</label>
+                <input type="date" id="geburtsdatum" name="geburtsdatum" required>
+            </div>
 
-        <button type="submit">Speichern</button>
+            <button type="submit" name="geburt">Speichern</button>
+        {% endif %}
     </form>
 </body>
 </html>
-

@@ -32,33 +32,52 @@ def jwt_login(request):
 def geburt(request):
 	if request.method == 'POST':
 
-		nachname = request.POST.get("nachname_geburt")
-		vorname = request.POST.get("vorname")
-		geburtsdatum = request.POST.get("geburtsdatum")
-		id_mutter = request.POST.get("id_mutter")
-		id_vater = request.POST.get("id_vater")
+		if "scan_mutter" in request.POST:
+			reader = SimpleMFRC522()
+			id_mutter = reader.read()
+			request.session["id_mutter"] = id_mutter
+			return redirect("geburt")
 
-		person = {"nachname_geburt": nachname, "vorname": vorname, "geburtsdatum": geburtsdatum, "vater_id": id_vater, "mutter_id": id_mutter}
-		elterngeld = {"id_vater": id_vater, "id_mutter": id_mutter}
+		if "scan_vater" in request.POST:
 
-		neugeboren = requests.post("http://[2001:7c0:2320:2:f816:3eff:fef8:f5b9]:8000/einwohnermeldeamt/personenstandsregister_api", data=person)
-		print(f"Personenregister: {neugeboren}")
+			reader = SimpleMFRC522()
+			id_vater = reader.read()
+			request.session["id_vater"] = id_vater
+			return redirect("geburt")
 
-		buerger_id = neugeboren.text
-		id_kind = {"id_kind": buerger_id}
+		if "geburt" in request.POST:
 
-		kindergeld = requests.post("http://[2001:7c0:2320:2:f816:3eff:fed4:e456]:1810/kindergeldanlegen", data=id_kind)
-		print(f"Kindergeld: {kindergeld}")
+			nachname = request.POST.get("nachname_geburt")
+			vorname = request.POST.get("vorname")
+			geburtsdatum = request.POST.get("geburtsdatum")
+			id_mutter = request.POST.get("id_mutter")
+			id_vater = request.POST.get("id_vater")
 
-		elterngeldanlegen = requests.post("http://[2001:7c0:2320:2:f816:3eff:fed4:e456]:1810/elterngeldanlegen", data=elterngeld)
-		print(f"Elterngeld: {elterngeldanlegen}")
+			person = {"nachname_geburt": nachname, "vorname": vorname, "geburtsdatum": geburtsdatum, "vater_id": id_vater, "mutter_id": id_mutter}
+			elterngeld = {"id_vater": id_vater, "id_mutter": id_mutter}
 
-		# Zurückgegebene Bürger ID auf RFID Karte schreiben
-		reader = SimpleMFRC522()
-		reader.write(buerger_id)
-		print(f"RFID-Karte beschrieben mit {buerger_id}.")
+			neugeboren = requests.post("http://[2001:7c0:2320:2:f816:3eff:fef8:f5b9]:8000/einwohnermeldeamt/personenstandsregister_api", data=person)
+			print(f"Personenregister: {neugeboren}")
 
-		return HttpResponse(f"Herzlichen Glückwunsch zur Geburt von {vorname}.")
+			buerger_id = neugeboren.text
+			id_kind = {"id_kind": buerger_id}
+
+			kindergeld = requests.post("http://[2001:7c0:2320:2:f816:3eff:fed4:e456]:1810/kindergeldanlegen", data=id_kind)
+			print(f"Kindergeld: {kindergeld}")
+
+			elterngeldanlegen = requests.post("http://[2001:7c0:2320:2:f816:3eff:fed4:e456]:1810/elterngeldanlegen", data=elterngeld)
+			print(f"Elterngeld: {elterngeldanlegen}")
+
+			# Zurückgegebene Bürger ID auf RFID Karte schreiben
+			reader = SimpleMFRC522()
+			reader.write(buerger_id)
+			print(f"RFID-Karte beschrieben mit {buerger_id}.")
+
+			# IDs wieder aus der Session löschen 
+			del request.session["id_mutter"]
+			del request.session["id_vater"]
+
+			return HttpResponse(f"Herzlichen Glückwunsch zur Geburt von {vorname}.")
 
 	else:
 		return render(request, "app/geburt.html")
@@ -71,14 +90,27 @@ def tod(request):
 		# Bürger ID aus RFID Karte auslesen
 		reader = SimpleMFRC522()
 		id, data = reader.read()
-		id_person = data
+		# Keine Ahnung wo sich ein unsichtbares Zeichen dazugemogelt hat - aber mit strip() gehts!
+		id_person = data.strip()
+		print(id_person)
+
+		response = requests.get(f"http://[2001:7c0:2320:2:f816:3eff:fef8:f5b9]:8000/einwohnermeldeamt/api/person/{id_person}", headers={"Connection": "close"})
+		print(response)
+		personendaten = response.json()
+		print(personendaten)
+		vorname = personendaten["vorname"]
+		if personendaten["nachname_neu"]:
+			nachname = personendaten["nachname_neu"]
+		else:
+			nachname = personendaten["nachname_geburt"]
+		name_person = f"{vorname} {nachname}"
 
 		person = {"buerger_id": id_person, "sterbedatum": sterbedatum}
 
 		response = requests.post("http://[2001:7c0:2320:2:f816:3eff:fef8:f5b9]:8000/einwohnermeldeamt/personenstandsregister_api", data=person)
 		print(response)
 
-		return HttpResponse(f"{id_person} ist verstorben am {sterbedatum}. Requiescat in pace.")
+		return HttpResponse(f"{name_person} ist verstorben am {sterbedatum}. Requiescat in pace.")
 
 	else:
 		return render(request, "app/tod.html")
