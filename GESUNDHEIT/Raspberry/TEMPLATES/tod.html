@@ -1,44 +1,12 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="de">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{% static 'styles.css' %}">
     <title>Tod erfassen</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        .form-group {
-            margin-bottom: 15px;
-        }
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-        input[type="text"],
-        input[type="date"] {
-            width: 100%;
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-        button {
-            background-color: #4CAF50;
-            color: white;
-            padding: 10px 15px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #45a049;
-        }
-    </style>
 </head>
 
 <body>
@@ -46,7 +14,7 @@
     <form method="post">
         {% csrf_token %}
 
-        <div class="form-group">
+        <div class="arztformular">
             <label for="sterbedatum">Sterbedatum:</label>
             <input type="date" id="sterbedatum" name="sterbedatum" required>
         </div>

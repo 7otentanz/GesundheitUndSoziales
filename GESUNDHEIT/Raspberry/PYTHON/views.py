@@ -15,7 +15,7 @@ def jwt_login(request):
     try:
         daten = decode_jwt(token)
         print(f"Raspberry daten: {daten}")
-        print(f"Raspberry user-id: {daten["user_id"]}")
+        print(f"Raspberry user-id: {daten['user_id']}")
     except Exception:
         return HttpResponse("Ungültiges oder abgelaufenes Token.", status=401)
 
@@ -34,14 +34,18 @@ def geburt(request):
 
 		if "scan_mutter" in request.POST:
 			reader = SimpleMFRC522()
-			id_mutter = reader.read()
+			id, data = reader.read()
+			id_mutter = data.strip()
+			print(id_mutter)
 			request.session["id_mutter"] = id_mutter
 			return redirect("geburt")
 
 		if "scan_vater" in request.POST:
 
 			reader = SimpleMFRC522()
-			id_vater = reader.read()
+			id, data = reader.read()
+			id_vater = data.strip()
+			print(id_vater)
 			request.session["id_vater"] = id_vater
 			return redirect("geburt")
 
@@ -50,22 +54,23 @@ def geburt(request):
 			nachname = request.POST.get("nachname_geburt")
 			vorname = request.POST.get("vorname")
 			geburtsdatum = request.POST.get("geburtsdatum")
-			id_mutter = request.POST.get("id_mutter")
-			id_vater = request.POST.get("id_vater")
+			id_mutter = request.session["id_mutter"]
+			id_vater = request.session["id_vater"]
 
 			person = {"nachname_geburt": nachname, "vorname": vorname, "geburtsdatum": geburtsdatum, "vater_id": id_vater, "mutter_id": id_mutter}
 			elterngeld = {"id_vater": id_vater, "id_mutter": id_mutter}
+			print(elterngeld)
 
-			neugeboren = requests.post("http://[2001:7c0:2320:2:f816:3eff:fef8:f5b9]:8000/einwohnermeldeamt/personenstandsregister_api", data=person)
+			neugeboren = requests.post("http://[2001:7c0:2320:2:f816:3eff:fef8:f5b9]:8000/einwohnermeldeamt/personenstandsregister_api", data=person, headers={"Connection": "close"})
 			print(f"Personenregister: {neugeboren}")
 
 			buerger_id = neugeboren.text
 			id_kind = {"id_kind": buerger_id}
 
-			kindergeld = requests.post("http://[2001:7c0:2320:2:f816:3eff:fed4:e456]:1810/kindergeldanlegen", data=id_kind)
+			kindergeld = requests.post("http://[2001:7c0:2320:2:f816:3eff:fed4:e456]:1810/kindergeldanlegen", data=id_kind, headers={"Connection": "close"})
 			print(f"Kindergeld: {kindergeld}")
 
-			elterngeldanlegen = requests.post("http://[2001:7c0:2320:2:f816:3eff:fed4:e456]:1810/elterngeldanlegen", data=elterngeld)
+			elterngeldanlegen = requests.post("http://[2001:7c0:2320:2:f816:3eff:fed4:e456]:1810/elterngeldanlegen", data=elterngeld, headers={"Connection": "close"})
 			print(f"Elterngeld: {elterngeldanlegen}")
 
 			# Zurückgegebene Bürger ID auf RFID Karte schreiben
@@ -77,8 +82,20 @@ def geburt(request):
 			del request.session["id_mutter"]
 			del request.session["id_vater"]
 
-			return HttpResponse(f"Herzlichen Glückwunsch zur Geburt von {vorname}.")
-
+			return HttpResponse(f"""
+                       			<html>
+                       				<head>
+                       					<title>Herzlichen Glückwunsch!</title>
+									</head>
+                       					<body style="display:flex; justify-content:center; align-items:center">
+                       						<div style="text-align:center">
+                       							<h1 style="font-size:3rem; color:#45a049">
+                       								Herzlichen Glückwunsch zur Geburt von {vorname}.
+												</h1>
+											</div>
+										</body>
+								</html>
+								""")
 	else:
 		return render(request, "app/geburt.html")
 
@@ -107,10 +124,23 @@ def tod(request):
 
 		person = {"buerger_id": id_person, "sterbedatum": sterbedatum}
 
-		response = requests.post("http://[2001:7c0:2320:2:f816:3eff:fef8:f5b9]:8000/einwohnermeldeamt/personenstandsregister_api", data=person)
+		response = requests.post("http://[2001:7c0:2320:2:f816:3eff:fef8:f5b9]:8000/einwohnermeldeamt/personenstandsregister_api", data=person, headers={"Connection": "close"})
 		print(response)
 
-		return HttpResponse(f"{name_person} ist verstorben am {sterbedatum}. Requiescat in pace.")
+		return HttpResponse(f"""
+                       			<html>
+                       				<head>
+                       					<title>Herzlichen Glückwunsch!</title>
+									</head>
+                       					<body style="display:flex; justify-content:center; align-items:center">
+                       						<div style="text-align:center">
+                       							<h1 style="font-size:3rem; color:#45a049">
+                       								{name_person} ist am {sterbedatum} verstorben. Requiescat in Pace.
+												</h1>
+											</div>
+										</body>
+								</html>
+							""")
 
 	else:
 		return render(request, "app/tod.html")

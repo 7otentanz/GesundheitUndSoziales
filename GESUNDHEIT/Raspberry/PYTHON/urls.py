@@ -17,6 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from app import views as app
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -24,3 +25,5 @@ urlpatterns = [
     path('geburt/', app.geburt, name='geburt'),
     path('tod/', app.tod, name='tod'),
 ]
+
+urlpatterns += staticfiles_urlpatterns()

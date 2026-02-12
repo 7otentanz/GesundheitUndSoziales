@@ -30,4 +30,5 @@ urlpatterns = [
     path('terminzeit/', app.terminzeit, name="terminzeit"),
     path('terminendetest/', app.terminendetest, name="terminendetest"),
 ]
+
 urlpatterns += staticfiles_urlpatterns()
