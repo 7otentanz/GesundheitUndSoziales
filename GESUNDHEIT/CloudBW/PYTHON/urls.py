@@ -29,6 +29,7 @@ urlpatterns = [
     path('termindatum/', app.termindatum, name="termindatum"),
     path('terminzeit/', app.terminzeit, name="terminzeit"),
     path('terminendetest/', app.terminendetest, name="terminendetest"),
+    path('videoabgabe/', app.videoabgabe, name="videoabgabe"),
 ]
 
 urlpatterns += staticfiles_urlpatterns()

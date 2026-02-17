@@ -1,0 +1,29 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="de">
+<head>
+        <meta charset="utf-8"></meta>
+        <meta name="viewport" content="width=device-width,initial-scale=1"></meta>
+        <title>Videoabgabe</title>
+        <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;  /* horizontal */
+            align-items: center;      /* vertikal */
+            background-color: #000;   /* optional – sieht bei Videos nicer aus */
+        }
+
+        video {
+            max-width: 78%;
+            height: auto;
+        }
+        </style>
+</head>
+<body>
+    <video controls>
+    <source src="{% static 'videoabgabe.mp4' %}" type="video/mp4">
+    Dein Browser unterstützt dieses Video nicht.
+    </video>
+</body>

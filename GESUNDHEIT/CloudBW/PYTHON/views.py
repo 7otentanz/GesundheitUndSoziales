@@ -177,4 +177,6 @@ def terminendetest(request):
 		response = HttpResponse(calendar.serialize(), content_type="text/calendar")
 		response["Content-Disposition"] = 'attachment; filename="termin.ics"'
 		return response
-		
+
+def videoabgabe(request):
+	return render(request, "app/videoabgabe.html")
