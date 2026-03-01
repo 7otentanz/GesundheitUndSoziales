@@ -167,12 +167,9 @@ def terminendetest(request):
 		event.end = endzeit
 		event.location = standort
 		event.description = f"Arzttermin bei:\n{arztname}, {spezialisierung}\nin folgendem Krankenhaus:\n{standort}.\nWir wünschen gute Besserung!"
-		#event.uid = f"{uuid.uuid4()}@unserstaat.de"
 		
 		calendar = Calendar()
 		calendar.events.add(event)
-		#calendar.extra.append("VERSION:2.0")
-		#calendar.extra.append("PRODID:-//unserstaat//arzttermin//DE")
 
 		response = HttpResponse(calendar.serialize(), content_type="text/calendar")
 		response["Content-Disposition"] = 'attachment; filename="termin.ics"'

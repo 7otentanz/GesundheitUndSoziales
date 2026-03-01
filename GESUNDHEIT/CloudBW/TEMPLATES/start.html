@@ -10,10 +10,13 @@
 <body>
         <h1>Willkommen in der Abteilung Gesundheit!</h1>
 
+        {% if not request.session.user_id %}
         <form action="http://[2001:7c0:2320:2:f816:3eff:fef8:f5b9]:8000/einwohnermeldeamt/login">
         <button type="submit">Zum Login</button>
         </form>
+        {% endif %}
 
+        {% if request.session.beruf == "arzt" %}
         <h2>Sie sind Arzt?</h2>
         <div class="link-container">
             <form action="http://raspberrypi.local:8000/geburt/">
@@ -23,9 +26,16 @@
             <button type="submit">Sterbefall anzeigen</button>
             </form>
         </div>
+        {% endif %}
 
+        {% if request.session.user_id %}
         <h2>Sie sind Bürger?</h2>
-        <a><div class="link">Terminvereinbarungssystem</div></a>
+        <div class="link-container">
+            <form action="http://[2001:7c0:2320:2:f816:3eff:fe06:8d56]:8000/terminspezialisierung/">
+            <button type="submit">Terminvereinbarungssystem</button>
+            </form>
+        </div>
+        {% endif %}
 
 </body>
 
